@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import Login from './Login'
 import './App.css';
 
@@ -30,10 +29,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
           <a href={'http://localhost:8080/'}>跨域1</a>
           <a href={'http://localhost:8080/login'}>跨域2</a>
           <div><button onClick={this.addClick.bind(this)}>add</button></div>
