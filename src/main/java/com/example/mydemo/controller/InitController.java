@@ -10,7 +10,7 @@ import javax.xml.ws.RequestWrapper;
 @Controller
 @CrossOrigin
 public class InitController {
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String init() {
         return "/index";
     }
