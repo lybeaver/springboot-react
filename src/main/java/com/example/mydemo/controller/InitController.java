@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.xml.ws.RequestWrapper;
 
 @Controller
-@CrossOrigin
+@RequestMapping("/scripts/build")
 public class InitController {
     @RequestMapping("/index")
     public String init() {
         return "/index";
     }
-    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    @RequestMapping(value = "/login")
     public String login() {
         return "/login";
     }
