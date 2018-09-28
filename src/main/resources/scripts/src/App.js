@@ -11,7 +11,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">
-            <a href={"/scripts/build/login"}>turn</a>
+            <a href={"/public/login"}>turn</a>
         </p>
       </div>
     );
