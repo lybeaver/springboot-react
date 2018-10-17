@@ -3,3 +3,21 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+#loginForm {
+  background-color: #fff;
+  border-radius: 20px;
+  width: 300px;
+  height: 350px;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+.login-form {
+  max-width: 300px;
+}
+.login-form-forgot {
+  float: right;
+}
+.login-form-button {
+  width: 100%;
+}
