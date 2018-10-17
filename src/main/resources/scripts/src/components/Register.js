@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
-
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
@@ -246,7 +244,4 @@ class RegistrationForm extends React.Component {
         );
     }
 }
-
-const WrappedRegistrationForm = Form.create()(RegistrationForm);
-
-ReactDOM.render(<WrappedRegistrationForm />, document.getElementById('loginForm'));
+export default Form.create()(RegistrationForm);

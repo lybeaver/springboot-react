@@ -1,7 +1,8 @@
-import React from 'react'
-import axios from 'axios'
+import React from 'react';
+import axios from 'axios';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import '../css/login.css'
 const FormItem = Form.Item;
 class NormalLoginForm extends React.Component{
     handleSubmit = (e) => {
@@ -42,7 +43,7 @@ class NormalLoginForm extends React.Component{
                     <Button type="primary" htmlType="submit" className="login-form-button">
                         Log in
                     </Button>
-                    Or <Router><Link to='/Register'>register now!</Link></Router>
+                    Or <Router><Link to='/register'>register now!</Link></Router>
                 </FormItem>
             </Form>
         );
