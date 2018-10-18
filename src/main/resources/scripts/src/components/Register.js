@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import '../css/register.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
@@ -51,7 +52,7 @@ class RegistrationForm extends React.Component {
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
         if (value && value !== form.getFieldValue('password')) {
-            callback('Two passwords that you enter is inconsistent!');
+            callback('两个密码不同!');
         } else {
             callback();
         }
@@ -65,15 +66,6 @@ class RegistrationForm extends React.Component {
         callback();
     }
 
-    handleWebsiteChange = (value) => {
-        let autoCompleteResult;
-        if (!value) {
-            autoCompleteResult = [];
-        } else {
-            autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-        }
-        this.setState({ autoCompleteResult });
-    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -110,21 +102,22 @@ class RegistrationForm extends React.Component {
             </Select>
         );
 
-        const websiteOptions = autoCompleteResult.map(website => (
-            <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-        ));
-
         return (
+            <div className="register-form">
             <Form onSubmit={this.handleSubmit}>
+                <FormItem>
+                    <h2 className="welcome-words">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;欢迎注册</h2>
+                </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="E-mail"
+                    label="邮箱"
                 >
                     {getFieldDecorator('email', {
                         rules: [{
-                            type: 'email', message: 'The input is not valid E-mail!',
+                            type: 'email', message: '请输入有效的E-mail!',
                         }, {
-                            required: true, message: 'Please input your E-mail!',
+                            required: true, message: '请输入E-mail!',
                         }],
                     })(
                         <Input />
@@ -132,11 +125,11 @@ class RegistrationForm extends React.Component {
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="Password"
+                    label="密码"
                 >
                     {getFieldDecorator('password', {
                         rules: [{
-                            required: true, message: 'Please input your password!',
+                            required: true, message: '输入密码!',
                         }, {
                             validator: this.validateToNextPassword,
                         }],
@@ -146,11 +139,11 @@ class RegistrationForm extends React.Component {
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="Confirm Password"
+                    label="确认密码"
                 >
                     {getFieldDecorator('confirm', {
                         rules: [{
-                            required: true, message: 'Please confirm your password!',
+                            required: true, message: '请确认你的密码!',
                         }, {
                             validator: this.compareToFirstPassword,
                         }],
@@ -162,7 +155,7 @@ class RegistrationForm extends React.Component {
                     {...formItemLayout}
                     label={(
                         <span>
-              Nickname&nbsp;
+              昵称&nbsp;
                             <Tooltip title="What do you want others to call you?">
                 <Icon type="question-circle-o" />
               </Tooltip>
@@ -170,52 +163,36 @@ class RegistrationForm extends React.Component {
                     )}
                 >
                     {getFieldDecorator('nickname', {
-                        rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+                        rules: [{ required: true, message: '输入你的昵称!', whitespace: true }],
                     })(
                         <Input />
                     )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="Habitual Residence"
+                    label="所在城市"
                 >
                     {getFieldDecorator('residence', {
                         initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-                        rules: [{ type: 'array', required: true, message: 'Please select your habitual residence!' }],
+                        rules: [{ type: 'array', required: true, message: '请输入城市信息!' }],
                     })(
                         <Cascader options={residences} />
                     )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="Phone Number"
+                    label="手机号码"
                 >
                     {getFieldDecorator('phone', {
-                        rules: [{ required: true, message: 'Please input your phone number!' }],
+                        rules: [{ required: true, message: '请输入手机号码!' }],
                     })(
                         <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                     )}
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
-                    label="Website"
-                >
-                    {getFieldDecorator('website', {
-                        rules: [{ required: true, message: 'Please input website!' }],
-                    })(
-                        <AutoComplete
-                            dataSource={websiteOptions}
-                            onChange={this.handleWebsiteChange}
-                            placeholder="website"
-                        >
-                            <Input />
-                        </AutoComplete>
-                    )}
-                </FormItem>
-                <FormItem
-                    {...formItemLayout}
-                    label="Captcha"
-                    extra="We must make sure that your are a human."
+                    label="验证码"
+                    extra="必须确保是成年人."
                 >
                     <Row gutter={8}>
                         <Col span={12}>
@@ -226,7 +203,7 @@ class RegistrationForm extends React.Component {
                             )}
                         </Col>
                         <Col span={12}>
-                            <Button>Get captcha</Button>
+                            <Button>获取验证码</Button>
                         </Col>
                     </Row>
                 </FormItem>
@@ -234,13 +211,14 @@ class RegistrationForm extends React.Component {
                     {getFieldDecorator('agreement', {
                         valuePropName: 'checked',
                     })(
-                        <Checkbox>I have read the <a href="">agreement</a></Checkbox>
+                        <Checkbox>我已经<a href="">同意</a></Checkbox>
                     )}
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit">Register</Button>
+                    <Button type="primary" htmlType="submit">注册</Button>
                 </FormItem>
             </Form>
+            </div>
         );
     }
 }
