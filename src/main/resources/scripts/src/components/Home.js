@@ -1,17 +1,18 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import '../css/home.css'
-import userList from '../components/Users'
+import UserList from '../components/Users'
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-
 class SiderDemo extends React.Component {
     state = {
+        UserList:"",
+        menuKey:0,
         collapsed: false,
     };
 
     onCollapse = (collapsed) => {
-        console.log(collapsed);
+        console.log("colll",collapsed);
         this.setState({ collapsed });
     }
 
@@ -25,7 +26,7 @@ class SiderDemo extends React.Component {
                 >
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                        <Menu.Item key="1">
+                        <Menu.Item key="1" onC>
                             <Icon type="pie-chart" />
                             <span>资源一览</span>
                         </Menu.Item>
@@ -44,25 +45,25 @@ class SiderDemo extends React.Component {
                             key="sub2"
                             title={<span><Icon type="tool" /><span>系统管理</span></span>}
                         >
-                            <Menu.Item key="6">权限设置</Menu.Item>
-                            <Menu.Item key="7">角色设置</Menu.Item>
-                            <Menu.Item key="8">角色分配</Menu.Item>
+                            <Menu.Item key="5">权限设置</Menu.Item>
+                            <Menu.Item key="6">角色设置</Menu.Item>
+                            <Menu.Item key="7">角色分配</Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="9">
+                        <Menu.Item key="8">
                             <Icon type="file" />
                             <span>文件管理</span>
                         </Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }} />
+                    <Header style={{ background: '#rrr', padding: 0 }} />
                     <Content style={{ margin: '0 16px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             <Breadcrumb.Item>User</Breadcrumb.Item>
                             <Breadcrumb.Item>Bill</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                            {userList}
+                            <UserList/>
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

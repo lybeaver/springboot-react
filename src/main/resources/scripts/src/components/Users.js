@@ -1,60 +1,69 @@
 import React from 'react'
-import { Table, Divider, Tag } from 'antd';
+import axios from 'axios'
+import _ from 'lodash'
+import { Table, Divider } from 'antd';
 
 const columns = [{
-    title: 'Name',
+    title: '名字',
     dataIndex: 'name',
     key: 'name',
-    render: text => <a href="javascript:;">{text}</a>,
 }, {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '电话',
+    dataIndex: 'telephone',
+    key: 'telephone',
 }, {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: '性别',
+    dataIndex: 'sex',
+    key: 'sex',
 }, {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-        <span>
-      {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-    </span>
-    ),
-}, {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-        <span>
-      <a href="javascript:;">Invite {record.name}</a>
-      <Divider type="vertical" />
-      <a href="javascript:;">Delete</a>
-    </span>
-    ),
+    title: '昵称',
+    dataIndex: 'loginName',
+    key: 'loginName',
+},{
+title: '操作',
+key: 'action',
+render: (text, record) => (
+    <span>
+  <a href="javascript:;">编辑</a>
+  <Divider type="vertical" />
+  <a href="javascript:;">删除</a>
+</span>
+),
 }];
 
-const data = [{
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-}, {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-}];
-const userList = ()=> (
-    <Table columns={columns} dataSource={data} />
-)
-export  default userList;
+class UserList extends React.Component {
+    state = {
+        data: []
+    };
+    componentDidMount() {
+        axios.get("http://localhost:8080/public/getUserList")
+              .then(response=>{
+                  console.log(response.data)
+                  let result = [];
+                  response.data.map((value,index) => {
+                        const item = {
+                            key: '',
+                            name: '',
+                            telephone: 0,
+                            sex: '',
+                            loginName:''
+                        }
+                        item.key = index.toString();
+                        item.name = value.name;
+                        item.telephone = value.telephone;
+                        item.sex = value.sex === "1" ? "男":"女";
+                        item.loginName = value.loginName;
+                        result.push(item);
+                      }
+                   )
+                  console.log(result)
+                  this.setState({data:result});
+              })
+    }
+    render(){
+       return (<Table columns={columns} dataSource={this.state.data}/>);
+    }
+
+}
+
+export  default UserList;

@@ -3,6 +3,8 @@ package com.example.mydemo.controller;
 import com.alibaba.fastjson.JSON;
 import com.example.mydemo.beans.tUser;
 import com.example.mydemo.service.UserService;
+import org.codehaus.plexus.util.CollectionUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,25 +18,21 @@ import java.util.List;
 public class InitController {
     @Autowired
     private UserService userService;
-    @RequestMapping(method=RequestMethod.GET,value="/index")
+    @RequestMapping(method=RequestMethod.GET,value="/getUserList")
     public List<tUser> init() {
-        List<tUser> userList = new ArrayList<tUser>();
-        tUser user1 = new tUser();
-        tUser user2 = new tUser();
-        user1.setName("chenglin");
-        user1.setPassword("123456");
-        user2.setName("tom");
-        user2.setPassword("123456");
-        userList.add(user1);
-        userList.add(user2);
+        List<tUser> userList = userService.getUsers(null,null);
         return userList;
     }
     @RequestMapping(method=RequestMethod.GET,value="/getUser")
-    public tUser getUser() {
-        tUser user1 = new tUser();
-        user1.setName("chenglin");
-        user1.setPassword("123456");
-        return user1;
+    public tUser getUser(tUser user) {
+        tUser loginUser = null;
+        if (StringUtils.isNotBlank(user.getName()) && StringUtils.isNotBlank(user.getPassword())) {
+            List<tUser> userList = userService.getUsers(user.getName(),user.getPassword());
+            if (userList != null && userList.size() > 0) {
+                loginUser = userList.get(0);
+            }
+        }
+        return loginUser;
     }
     @RequestMapping(value = "/login")
     public String login() {

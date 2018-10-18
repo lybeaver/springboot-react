@@ -15,7 +15,11 @@ public class UserService {
 
     public List<tUser> getUsers(String userName, String password) {
         tUserExample userExample = new tUserExample();
-        userExample.createCriteria().andLoginNameEqualTo(userName).andPasswordEqualTo(password);
+        if (userName == null && password == null) {
+            userExample.createCriteria().andDeleteFlgEqualTo("0");
+        } else {
+            userExample.createCriteria().andLoginNameEqualTo(userName).andPasswordEqualTo(password).andDeleteFlgEqualTo("0");
+        }
         List<tUser> users = userMapper.selectByExample(userExample);
         return users;
     }
