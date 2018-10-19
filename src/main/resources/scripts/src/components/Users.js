@@ -35,7 +35,7 @@ class UserList extends React.Component {
     state = {
         data: []
     };
-    componentDidMount() {
+    componentDidUpdate() {
         axios.get("http://localhost:8080/public/getUserList")
               .then(response=>{
                   console.log(response.data)

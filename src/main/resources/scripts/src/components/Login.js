@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { createStore } from 'redux';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import '../css/login.less'
@@ -55,17 +56,5 @@ class NormalLoginForm extends React.Component{
             </div>
         );
     }
-    // state = {
-    //     loginState : false
-    // }
-    // checkLogin() {
-    //     axios.get("http://localhost:8080/public/index")
-    //         .then(response=>{
-    //             console.log(response.data)
-    //         })
-    // }
-    // componentDidMount() {
-    //     console.log("login success")
-    // }
 }
 export default Form.create()(NormalLoginForm);

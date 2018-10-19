@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
 import './index.css';
 import BasicRoute from './Routes';
-import UserLists from './components/Users'
-ReactDOM.render(<BasicRoute/>,document.getElementById('root'))
+ReactDOM.render(<Provider store={BasicRoute}> <app/> </Provider>,document.getElementById('root'))
