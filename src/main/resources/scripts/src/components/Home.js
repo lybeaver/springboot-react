@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import '../css/home.css'
+import { Link } from 'react-router-dom';
 import UserList from '../components/Users'
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -12,23 +12,19 @@ class SiderDemo extends React.Component {
     };
 
     onCollapse = (collapsed) => {
-        console.log("colll",collapsed);
         this.setState({ collapsed });
     }
 
     render() {
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider
-                    collapsible
-                    collapsed={this.state.collapsed}
-                    onCollapse={this.onCollapse}
-                >
-                    <div className="logo" />
+                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                        <Menu.Item key="1" onC>
+                        <Menu.Item key="1">
+                            <Link to="/page1">
                             <Icon type="pie-chart" />
                             <span>资源一览</span>
+                            </Link>
                         </Menu.Item>
                         <Menu.Item key="2">
                             <Icon type="desktop" />
@@ -58,10 +54,7 @@ class SiderDemo extends React.Component {
                 <Layout>
                     <Header style={{ background: '#rrr', padding: 0 }} />
                     <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                        </Breadcrumb>
+                        {/*{this.props.children}*/}
                         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                             <UserList/>
                         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { createStore } from 'redux';
 import {Form, Icon, Input, Button, Checkbox} from 'antd';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import '../css/login.less'
 const FormItem = Form.Item;
 class NormalLoginForm extends React.Component{
@@ -49,7 +49,7 @@ class NormalLoginForm extends React.Component{
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 登 录
                             </Button>
-                            <Router><Link to='/Register'>去注册</Link></Router>
+                            <Route><Link to='/Register'>去注册</Link></Route>
                         </FormItem>
                     </Form>
                 </div>
