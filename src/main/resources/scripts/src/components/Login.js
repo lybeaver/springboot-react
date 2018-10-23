@@ -17,6 +17,7 @@ class NormalLoginForm extends React.Component{
                             console.log("login error");
                         } else {
                             console.log(res.data);
+                            this.props.history.push("/home");
                         }
                     });
             }
