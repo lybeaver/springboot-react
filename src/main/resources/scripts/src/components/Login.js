@@ -11,6 +11,14 @@ class NormalLoginForm extends React.Component{
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
+                axios.post("http://localhost:8080/public/login",values)
+                    .then(res=>{
+                        if (res.data == '') {
+                            console.log("login error");
+                        } else {
+                            console.log(res.data);
+                        }
+                    });
             }
         });
     }
@@ -25,7 +33,7 @@ class NormalLoginForm extends React.Component{
                     </div>
                     <Form onSubmit={this.handleSubmit}>
                         <FormItem>
-                            {getFieldDecorator('userName', {
+                            {getFieldDecorator('loginName', {
                                 rules: [{ required: true, message: '请输入用户名' }],
                             })(
                                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />

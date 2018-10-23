@@ -1,17 +1,14 @@
 package com.example.mydemo.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.example.mydemo.beans.tUser;
+import com.example.mydemo.commons.Encrypt;
 import com.example.mydemo.service.UserService;
-import org.codehaus.plexus.util.CollectionUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.RequestWrapper;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/public")
@@ -34,9 +31,32 @@ public class InitController {
         }
         return loginUser;
     }
-    @RequestMapping(value = "/login")
-    public String login() {
-        return "/login";
+    @RequestMapping(value = "/login",headers = "Accept=application/json",method = RequestMethod.POST)
+    @ResponseBody
+    public String login(@RequestBody tUser user) {
+        tUser loginUser = null;
+        String token = null;
+        if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())) {
+            List<tUser> userList = userService.getUsers(user.getLoginName(),user.getPassword());
+            if (userList != null && userList.size() > 0) {
+                loginUser = userList.get(0);
+            }
+        }
+        if (loginUser != null) {
+            token = Encrypt.getToken(user.getLoginName(),user.getPassword());
+        }
+        return token;
+    }
+
+    @RequestMapping(value = "/loginMap",method = RequestMethod.POST)
+    @ResponseBody
+    public String loginMap(@RequestBody String user) {
+        tUser loginUser = null;
+        String token = null;
+        if (user != null) {
+            System.out.println("mapamp"+user);
+        }
+        return token;
     }
 
 }

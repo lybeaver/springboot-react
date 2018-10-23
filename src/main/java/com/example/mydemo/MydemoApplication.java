@@ -15,6 +15,9 @@ public class MydemoApplication {
         SpringApplication.run(MydemoApplication.class, args);
     }
 
+    /*
+    * 跨域
+    * */
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

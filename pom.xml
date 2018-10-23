@@ -150,9 +150,6 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<!--
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>
-                            -->
 							<outputDirectory>${basedir}/src/main/resources/public</outputDirectory>
 							<resources>
 								<resource>
