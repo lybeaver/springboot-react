@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import _ from 'lodash'
 import { Table, Divider } from 'antd';
 
 const columns = [{
@@ -24,10 +23,10 @@ title: '操作',
 key: 'action',
 render: (text, record) => (
     <span>
-  <a href="javascript:;">编辑</a>
-  <Divider type="vertical" />
-  <a href="javascript:;">删除</a>
-</span>
+      <a href="javascript:;">编辑</a>
+      <Divider type="vertical" />
+      <a href="javascript:;">删除</a>
+    </span>
 ),
 }];
 
@@ -35,7 +34,7 @@ class UserList extends React.Component {
     state = {
         data: []
     };
-    componentDidUpdate() {
+    componentDidMount() {
         axios.get("http://localhost:8080/public/getUserList")
               .then(response=>{
                   console.log(response.data)
@@ -56,9 +55,15 @@ class UserList extends React.Component {
                         result.push(item);
                       }
                    )
-                  console.log(result)
+                  console.log("userlist",result)
                   this.setState({data:result});
               })
+    }
+    componentDidUpdate () {
+
+    }
+    componentWillUnmount () {
+
     }
     render(){
        return (<Table columns={columns} dataSource={this.state.data}/>);

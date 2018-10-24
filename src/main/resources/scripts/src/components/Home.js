@@ -1,7 +1,9 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { Link } from 'react-router-dom';
-import UserList from '../components/Users'
+import { Link, Route, Redirect } from 'react-router-dom';
+import UserList from '../components/Users';
+import {connect} from "react-redux";
+import { logout } from "../reducer/LoginReducer";
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 class SiderDemo extends React.Component {
@@ -16,6 +18,9 @@ class SiderDemo extends React.Component {
     }
 
     render() {
+        if(this.props.token.isLogin === false){
+            return <Redirect to="/" />
+        }
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -34,7 +39,7 @@ class SiderDemo extends React.Component {
                             key="sub1"
                             title={<span><Icon type="user" /><span>用户管理</span></span>}
                         >
-                            <Menu.Item key="3">一览</Menu.Item>
+                            <Menu.Item key="3"> <Link to="/page1">一览</Link></Menu.Item>
                             <Menu.Item key="4">添加</Menu.Item>
                         </SubMenu>
                         <SubMenu
@@ -52,12 +57,11 @@ class SiderDemo extends React.Component {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Header style={{ background: '#rrr', padding: 0 }} />
-                    <Content style={{ margin: '0 16px' }}>
-                        {/*{this.props.children}*/}
-                        <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                            <UserList/>
-                        </div>
+                    <Header style={{ background: '#fff', padding: 0 }}>
+                        <Icon type="logout" style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
+                    </Header>
+                    <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+                        <UserList/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         Ant Design ©2018 Created by Ant UED
@@ -67,4 +71,14 @@ class SiderDemo extends React.Component {
         );
     }
 }
-export default SiderDemo;
+
+function mapStateToProps(state) {
+    return { token:{isLogin:true} };
+}
+
+function mapDispatchToProps() {
+    return {};
+}
+
+let home = connect(mapStateToProps,mapDispatchToProps)(SiderDemo);
+export default home;
