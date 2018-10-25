@@ -1,14 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import {Form, Icon, Input, Button, Checkbox} from 'antd';
+import {Form, Icon, Input, Button, Checkbox, Alert} from 'antd';
 import { connect } from 'react-redux';
 import { Route, Link, Redirect } from "react-router-dom";
 import '../css/login.less'
 const FormItem = Form.Item;
-
 class NormalLoginForm extends React.Component{
     state = {
-        token:{},
+        loginError: false,
         loading: false,
         loadText: '登录'
     }
@@ -23,10 +22,10 @@ class NormalLoginForm extends React.Component{
                     .then(res=>{
                         if (res.data == '') {
                             console.log("login error");
+                            this.setState({loginError: true});
                         } else {
                             console.log(res.data);
-                            mapStateToProps({username:'chenglin'});
-                            this.props.LOGIN(null,this.props.history);
+                            this.props.login(this.props.history,res.data);
                         }
                     });
             }
@@ -41,7 +40,7 @@ class NormalLoginForm extends React.Component{
                     <div className="login-logo">
                         <div className="login-name">优雅</div>
                     </div>
-                    { this.props.isAuth?<Redirect to='home' />:null }
+
                     <Form onSubmit={this.handleSubmit}>
                         <FormItem>
                             {getFieldDecorator('loginName', {
@@ -57,6 +56,7 @@ class NormalLoginForm extends React.Component{
                                 <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
                             )}
                         </FormItem>
+                        {this.state.loginError ? <div><Alert message="登录信息不正确" type="error" showIcon /></div>:''}
                         <FormItem>
                             {getFieldDecorator('remember', {
                                 valuePropName: 'checked',
@@ -68,7 +68,7 @@ class NormalLoginForm extends React.Component{
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 登 录
                             </Button>
-                            <Route><Link to='/Register'>去注册</Link></Route>
+                            <Route><Link to='/register'>去注册</Link></Route>
                         </FormItem>
                     </Form>
                 </div>
@@ -76,20 +76,18 @@ class NormalLoginForm extends React.Component{
         );
     }
 }
+
 // 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
 function mapStateToProps(state) {
-    return {
-        token:state.username
-    }
+    return {state}
 }
 
 // 哪些 action 创建函数是我们想要通过 props 获取的？
 function mapDispatchToProps(dispatch) {
     return {
-        LOGIN:function(username, history){
-            console.log("用户名"+username)
+        login:function(history,token){
             setTimeout(function(){
-                dispatch({type:"LOGIN"})
+                dispatch({type:"LOGIN", state:token})
                 history.push("/Home")
             },1000)
         }
@@ -98,5 +96,4 @@ function mapDispatchToProps(dispatch) {
 
 //封装传递state和dispatch
 let LoginRedux = connect(mapStateToProps,mapDispatchToProps)(Form.create()(NormalLoginForm));
-
 export default LoginRedux;

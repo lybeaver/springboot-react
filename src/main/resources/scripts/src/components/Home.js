@@ -1,9 +1,9 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { Link, Route, Redirect } from 'react-router-dom';
-import UserList from '../components/Users';
+import {Link, Route, Redirect, Switch} from 'react-router-dom';
 import {connect} from "react-redux";
-import { logout } from "../reducer/LoginReducer";
+import Register from '../components/Register';
+import Users from '../components/Users';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 class SiderDemo extends React.Component {
@@ -18,12 +18,14 @@ class SiderDemo extends React.Component {
     }
 
     render() {
-        if(this.props.token.isLogin === false){
-            return <Redirect to="/" />
+        const match = this.props.match;
+        console.log("homehoem",this.props);
+        if (this.props.token === '' || this.props.token === undefined) {
+            return <Redirect to="/login" />
         }
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                <Sider collapsible collapsed={ this.state.collapsed } onCollapse={this.onCollapse}>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
                             <Link to="/page1">
@@ -39,8 +41,8 @@ class SiderDemo extends React.Component {
                             key="sub1"
                             title={<span><Icon type="user" /><span>用户管理</span></span>}
                         >
-                            <Menu.Item key="3"> <Link to="/page1">一览</Link></Menu.Item>
-                            <Menu.Item key="4">添加</Menu.Item>
+                            <Menu.Item key="3"><Link to={`${match.url}/users`}>一览</Link></Menu.Item>
+                            <Menu.Item key="4"><Link to={`${match.url}/register`}>添加</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu
                             key="sub2"
@@ -58,10 +60,11 @@ class SiderDemo extends React.Component {
                 </Sider>
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
-                        <Icon type="logout" style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
+                        <Icon type="logout" onClick={ this.props.logout } style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-                        <UserList/>
+                        <Route path={`${match.url}/register`} exact component={Register}/>
+                        <Route path={`${match.url}/users`} exact component={Users}/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         Ant Design ©2018 Created by Ant UED
@@ -73,11 +76,16 @@ class SiderDemo extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { token:{isLogin:true} };
+    return { token: state };
 }
 
-function mapDispatchToProps() {
-    return {};
+function mapDispatchToProps(dispatch) {
+    return {
+        logout:function(history){
+            dispatch({ type:"LOGOUT",state:'' });
+            history.push("/login");
+        }
+    };
 }
 
 let home = connect(mapStateToProps,mapDispatchToProps)(SiderDemo);

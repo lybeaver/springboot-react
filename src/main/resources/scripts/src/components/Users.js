@@ -59,12 +59,12 @@ class UserList extends React.Component {
                   this.setState({data:result});
               })
     }
-    componentDidUpdate () {
-
-    }
-    componentWillUnmount () {
-
-    }
+    // componentDidUpdate () {
+    //
+    // }
+    // componentWillUnmount () {
+    //
+    // }
     render(){
        return (<Table columns={columns} dataSource={this.state.data}/>);
     }

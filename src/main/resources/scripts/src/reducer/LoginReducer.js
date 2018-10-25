@@ -1,20 +1,20 @@
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 //reducer
-export function auth(state={ isLogin:false,username:'',auths:[]}, action) {
+export function auth(state='',action) {
     switch(action.type){
         case LOGIN:
-            return { ...state,isLogin:true };
+            return action.state;
         case LOGOUT:
-            return { ...state,isLogin:false };
+            return action.state;
         default:
-            return state
+            return state;
     }
 }
 //action creator
-export function login() {
-    return { type: LOGIN }
+export function login(state) {
+    return { type: LOGIN, state }
 }
-export function logout() {
-    return { type: LOGOUT }
+export function logout(state) {
+    return { type: LOGOUT, state }
 }
