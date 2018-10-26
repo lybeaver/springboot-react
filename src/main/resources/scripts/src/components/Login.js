@@ -5,6 +5,11 @@ import { connect } from 'react-redux';
 import { Route, Link, Redirect } from "react-router-dom";
 import '../css/login.less'
 const FormItem = Form.Item;
+const initState = {
+    isLogin: false,
+    token: '',
+    user:{}
+}
 class NormalLoginForm extends React.Component{
     state = {
         loginError: false,
@@ -19,15 +24,17 @@ class NormalLoginForm extends React.Component{
                 this.setState({loading: true});
                 this.setState({loadText: "登录中..."});
                 axios.post("http://localhost:8080/public/login",values)
-                    .then(res=>{
-                        if (res.data == '') {
-                            console.log("login error");
-                            this.setState({loginError: true});
-                        } else {
-                            console.log(res.data);
-                            this.props.login(this.props.history,res.data);
-                        }
-                    });
+                .then(res=>{
+                    if (res.data == '') {
+                        this.setState({loginError: true});
+                    } else {
+                        console.log("store",this.props)
+                        initState.isLogin = true
+                        initState.token = res.data
+                        initState.user = {}
+                        this.props.login(this.props.history, initState);
+                    }
+                });
             }
         });
     }
@@ -85,9 +92,9 @@ function mapStateToProps(state) {
 // 哪些 action 创建函数是我们想要通过 props 获取的？
 function mapDispatchToProps(dispatch) {
     return {
-        login:function(history,token){
+        login:function(history,state){
             setTimeout(function(){
-                dispatch({type:"LOGIN", state:token})
+                dispatch({type:"LOGIN", state:state})
                 history.push("/Home")
             },1000)
         }

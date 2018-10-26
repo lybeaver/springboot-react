@@ -1,31 +1,38 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import {Link, Route, Redirect, Switch} from 'react-router-dom';
+import {NavLink, Link, Route, Redirect, Switch, BrowserRouter} from 'react-router-dom';
 import {connect} from "react-redux";
 import Register from '../components/Register';
 import Users from '../components/Users';
+import '../css/home.less'
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 class SiderDemo extends React.Component {
     state = {
-        UserList:"",
-        menuKey:0,
         collapsed: false,
     };
 
-    onCollapse = (collapsed) => {
-        this.setState({ collapsed });
+    toggle = () => {
+        this.setState({
+            collapsed: !this.state.collapsed,
+        });
     }
 
     render() {
         const match = this.props.match;
-        console.log("homehoem",this.props);
-        if (this.props.token === '' || this.props.token === undefined) {
+        console.log('matchmatch',match);
+        console.log("homehoem",this.props,this.props.token.loginInfo.isLogin );
+        if (this.props.token.loginInfo.isLogin === false) {
             return <Redirect to="/login" />
         }
         return (
-            <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={ this.state.collapsed } onCollapse={this.onCollapse}>
+            <Layout>
+                <Sider
+                    trigger={null}
+                    collapsible
+                    collapsed={this.state.collapsed}
+                >
+                    <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1">
                             <Link to="/page1">
@@ -41,7 +48,7 @@ class SiderDemo extends React.Component {
                             key="sub1"
                             title={<span><Icon type="user" /><span>用户管理</span></span>}
                         >
-                            <Menu.Item key="3"><Link to={`${match.url}/users`}>一览</Link></Menu.Item>
+                            <Menu.Item key="3"><NavLink exact to={`${match.url}/users`}>一览</NavLink></Menu.Item>
                             <Menu.Item key="4"><Link to={`${match.url}/register`}>添加</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu
@@ -60,14 +67,14 @@ class SiderDemo extends React.Component {
                 </Sider>
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
+                        <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
                         <Icon type="logout" onClick={ this.props.logout } style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-                        <Route path={`${match.url}/register`} exact component={Register}/>
-                        <Route path={`${match.url}/users`} exact component={Users}/>
+                        <Route path={`${match.url}/users`} component={Users}/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Ant Design ©2018 Created by Ant UED
+                        Web ©2018 Created by 我是谁，我在哪
                     </Footer>
                 </Layout>
             </Layout>

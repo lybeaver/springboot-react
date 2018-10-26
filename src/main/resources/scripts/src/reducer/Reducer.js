@@ -1,4 +1,7 @@
-import { combineReducers } from 'redux';
-import { auth } from './LoginReducer.js';
+import { combineReducers,createStore } from 'redux';
+import { loginInfo } from './LoginReducer.js';
 
-export default combineReducers({auth});
+const reducers =  combineReducers({loginInfo});
+const store = createStore(reducers);
+
+export default store;

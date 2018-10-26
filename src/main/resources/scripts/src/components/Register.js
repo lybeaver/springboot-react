@@ -3,31 +3,7 @@ import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Butto
 import '../css/register.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
-const AutoCompleteOption = AutoComplete.Option;
 
-const residences = [{
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [{
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [{
-            value: 'xihu',
-            label: 'West Lake',
-        }],
-    }],
-}, {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [{
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [{
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-        }],
-    }],
-}];
 
 class RegistrationForm extends React.Component {
     state = {
@@ -69,7 +45,6 @@ class RegistrationForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { autoCompleteResult } = this.state;
 
         const formItemLayout = {
             labelCol: {
@@ -166,17 +141,6 @@ class RegistrationForm extends React.Component {
                         rules: [{ required: true, message: '输入你的昵称!', whitespace: true }],
                     })(
                         <Input />
-                    )}
-                </FormItem>
-                <FormItem
-                    {...formItemLayout}
-                    label="所在城市"
-                >
-                    {getFieldDecorator('residence', {
-                        initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-                        rules: [{ type: 'array', required: true, message: '请输入城市信息!' }],
-                    })(
-                        <Cascader options={residences} />
                     )}
                 </FormItem>
                 <FormItem

@@ -1,14 +1,20 @@
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 //reducer
-export function auth(state='',action) {
+const initState = {
+    isLogin: false,
+    token: '',
+    user:{}
+}
+export function loginInfo (state = initState,action) {
+    console.log("actioninfo",action);
     switch(action.type){
         case LOGIN:
-            return action.state;
+            return {isLogin: true, token:action.state.token, user:action.state.user};
         case LOGOUT:
-            return action.state;
+            return initState;
         default:
-            return state;
+            return initState;
     }
 }
 //action creator
