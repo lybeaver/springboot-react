@@ -1,6 +1,7 @@
 package com.example.mydemo.commons;
 
 public class MsgContant {
+
     public enum DEL_FLG {
         /** 0 */
         COMMON("0"),
@@ -18,4 +19,5 @@ public class MsgContant {
             return this.id;
         }
     }
+
 }

@@ -25,13 +25,15 @@ class NormalLoginForm extends React.Component{
                 this.setState({loadText: "登录中..."});
                 axios.post("http://localhost:8080/public/login",values)
                 .then(res=>{
-                    if (res.data == '') {
+                    if (res.data === '') {
                         this.setState({loginError: true});
                     } else {
                         console.log("store",this.props)
                         initState.isLogin = true
                         initState.token = res.data
                         initState.user = {}
+                        localStorage.setItem("my_token",res.data);
+                        console.log("console_localStorage",localStorage.getItem('my_token'));
                         this.props.login(this.props.history, initState);
                     }
                 });

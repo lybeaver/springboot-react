@@ -7,7 +7,6 @@ const initState = {
     user:{}
 }
 export function loginInfo (state = initState,action) {
-    console.log("actioninfo",action);
     switch(action.type){
         case LOGIN:
             return {isLogin: true, token:action.state.token, user:action.state.user};
