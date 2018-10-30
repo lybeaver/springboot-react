@@ -16,6 +16,9 @@ class NormalLoginForm extends React.Component{
         loading: false,
         loadText: '登录'
     }
+    componentWillMount() {
+        localStorage.removeItem('my_token')
+    }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {

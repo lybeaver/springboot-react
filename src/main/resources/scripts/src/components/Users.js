@@ -39,7 +39,7 @@ class UserList extends React.Component {
               .then(response=>{
                   console.log(response.data)
                   let result = [];
-                  response.data.map((value,index) => {
+                  (response.data.data || []).map((value,index) => {
                         const item = {
                             key: '',
                             name: '',

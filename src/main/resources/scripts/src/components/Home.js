@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import {NavLink, Link, Route, Redirect, Switch, BrowserRouter} from 'react-router-dom';
+import {NavLink, Link, Route, Redirect, Switch, BrowserRouter,withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
 import Register from '../components/Register';
 import Users from '../components/Users';
@@ -20,11 +20,12 @@ class SiderDemo extends React.Component {
 
     render() {
         const match = this.props.match;
+        console.log('matchmatch',this.props);
         console.log('matchmatch',match);
         console.log("homehoem",this.props,this.props.token.loginInfo.isLogin );
-        if (this.props.token.loginInfo.isLogin === false) {
-            return <Redirect to="/login" />
-        }
+        // if (this.props.token.loginInfo.isLogin === false) {
+        //     return <Redirect to="/login" />
+        // }
         return (
             <Layout>
                 <Sider
@@ -96,4 +97,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 let home = connect(mapStateToProps,mapDispatchToProps)(SiderDemo);
-export default home;
+export default withRouter(home);
