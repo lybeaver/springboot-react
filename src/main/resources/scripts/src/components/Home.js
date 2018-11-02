@@ -1,8 +1,9 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar } from 'antd';
 import { NavLink, Link, Route, Redirect, Switch, BrowserRouter,withRouter } from 'react-router-dom';
 import {connect} from "react-redux";
 import Register from '../components/Register';
+import AddUser from '../components/AddUser'
 import Users from '../components/Users';
 import '../css/home.less'
 const { Header, Content, Footer, Sider } = Layout;
@@ -65,9 +66,10 @@ class SiderDemo extends React.Component {
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
                         <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
+                        <Avatar className='userAvatar' style={{ backgroundColor: '#87d068',float: 'right',top:'20px',right:'80px' }} size="small" icon="user" />
                         <Icon type="logout" onClick={ this.props.logout } style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
                     </Header>
-                    <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+                    <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 650 }}>
                         <Route path={`${match.url}/users`} component={Users}/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
@@ -80,7 +82,7 @@ class SiderDemo extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return { token: state };
+    return { state: state };
 }
 
 function mapDispatchToProps(dispatch) {

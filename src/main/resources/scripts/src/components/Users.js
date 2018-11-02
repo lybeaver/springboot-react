@@ -1,7 +1,11 @@
 import React from 'react'
 import axios from 'axios'
-import { Table, Divider, Modal, Button } from 'antd';
-const confirm = Modal.confirm
+import {Table, Divider, Modal, Button, Select, Input, Col, Form} from 'antd';
+import { connect } from 'react-redux';
+import AddUser from '../components/AddUser';
+const confirm = Modal.confirm;
+const InputGroup = Input.Group;
+const Option = Select.Option;
 const columns = [{
         title: '名字',
         dataIndex: 'name',
@@ -50,9 +54,17 @@ class UserList extends React.Component {
         this.handleCancel = this.handleCancel.bind(this)
         this.state = {
             data: [],
-            visible: false
+            visible: false,
+            drawerVisible: false
         };
     }
+
+    showDrawer = () => {
+        this.setState({
+            drawerVisible: true,
+        });
+    };
+
 
     showModal = () => {
         this.setState({
@@ -78,7 +90,7 @@ class UserList extends React.Component {
     componentDidMount() {
         columns[4].render = (text, record) => (
             <span>
-                <Button  onClick={this.showModal}>编辑</Button>
+                <Button  onClick={this.props.showDrawer}>编辑</Button>
                 <Divider type="vertical" />
                 <Button  onClick={deleteConfirm}>删除</Button>
             </span>
@@ -117,23 +129,59 @@ class UserList extends React.Component {
         }
     }
     render(){
-       return (<div><div>
-           <Modal
-               title="信息编辑"
-               visible = {this.state.visible}
-               onOk={this.handleOk}
-               onCancel={this.handleCancel}
-               okText='保存'
-               cancelText='返回'
-           >
-               <p>Some contents...</p>
-               <p>Some contents...</p>
-               <p>Some contents...</p>
-           </Modal>
-       </div>
+       return (
+           <div>
+               <div>
+               <Modal
+                   title="信息编辑"
+                   visible = {this.state.visible}
+                   onOk={this.handleOk}
+                   onCancel={this.handleCancel}
+                   okText='保存'
+                   cancelText='返回'
+               >
+                   <p>Some contents...</p>
+                   <p>Some contents...</p>
+                   <p>Some contents...</p>
+               </Modal>
+           </div>
+               <InputGroup compact>
+                   <Col span={151}>
+                   <Input style={{ width: 150}} placeholder="昵称" />
+                   </Col>
+                   <Col span={151}>
+                   <Input style={{ width: 150}} placeholder="电话" />
+                   </Col>
+                   <Col span={81}>
+                   <Select defaultValue="1" style={{ width: 80}}>
+                       <Option value="1">男</Option>
+                       <Option value="0">女</Option>
+                   </Select>
+                   </Col>
+                   <div>
+                   <Button type="primary" style={{
+                       marginRight: 8,
+                   }} icon="search">搜索</Button>
+                   <Button type="primary" onClick={this.props.showDrawer}>添加成员</Button>
+                   </div>
+                   <AddUser/>
+               </InputGroup>
+               <div style={{height:20}}/>
            <Table columns={columns} dataSource={this.state.data}/>
        </div>);
     }
 }
+function mapStateToProps(state) {
+    return { state: state };
+}
 
-export default UserList;
+function mapDispatchToProps(dispatch) {
+    return {
+        showDrawer:function(){
+            dispatch({ type:"SHOW_DRAWER"});
+        }
+    };
+}
+
+let UserListRedux = connect(mapStateToProps,mapDispatchToProps)(UserList);
+export default UserListRedux;
