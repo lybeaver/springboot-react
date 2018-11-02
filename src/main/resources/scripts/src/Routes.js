@@ -1,10 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Redirect, withRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Route, Switch, Redirect,withRouter } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from  './components/Home';
-import Store from './reducer/Reducer';
 import axios from 'axios';
 class BasicRoute extends React.Component {
 
@@ -19,14 +17,14 @@ class BasicRoute extends React.Component {
         console.log("history history",history);
         console.log("my_token my_token",token);
         axios.interceptors.request.use(function (config) {
-            console.log("1111111111111",config)
+            console.log("1111111111111",token)
             if (config.url !== '/login' && token) {
                 console.log("2222222222222",config)
                 config.headers.Authorization = token;
-            } else if(token == null || token === '') {
+            } else if (token == null || token === '') {
                 setTimeout(()=>{
                     history.push('/login')
-                },1000)
+                },1)
             }
             return config;
         },function (error) {
@@ -40,7 +38,7 @@ class BasicRoute extends React.Component {
             console.log("error",error);
             setTimeout(() => {
                 history.push('/login')
-            },1000)
+            },1)
             return Promise.reject(error);
         })
     }

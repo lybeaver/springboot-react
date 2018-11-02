@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import {NavLink, Link, Route, Redirect, Switch, BrowserRouter,withRouter} from 'react-router-dom';
+import { NavLink, Link, Route, Redirect, Switch, BrowserRouter,withRouter } from 'react-router-dom';
 import {connect} from "react-redux";
 import Register from '../components/Register';
 import Users from '../components/Users';
@@ -19,13 +19,9 @@ class SiderDemo extends React.Component {
     }
 
     render() {
+        const defaultSelected = this.props.history.location.pathname;
         const match = this.props.match;
-        console.log('matchmatch',this.props);
-        console.log('matchmatch',match);
-        console.log("homehoem",this.props,this.props.token.loginInfo.isLogin );
-        // if (this.props.token.loginInfo.isLogin === false) {
-        //     return <Redirect to="/login" />
-        // }
+        console.log('matchmatch',match,defaultSelected);
         return (
             <Layout>
                 <Sider
@@ -34,7 +30,7 @@ class SiderDemo extends React.Component {
                     collapsed={this.state.collapsed}
                 >
                     <div className="logo" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                    <Menu theme="dark" defaultSelectedKeys={[defaultSelected]} mode="inline">
                         <Menu.Item key="1">
                             <Link to="/page1">
                             <Icon type="pie-chart" />
@@ -46,11 +42,11 @@ class SiderDemo extends React.Component {
                             <span>效果一览</span>
                         </Menu.Item>
                         <SubMenu
-                            key="sub1"
+                            key="/home"
                             title={<span><Icon type="user" /><span>用户管理</span></span>}
                         >
-                            <Menu.Item key="3"><NavLink exact to={`${match.url}/users`}>一览</NavLink></Menu.Item>
-                            <Menu.Item key="4"><Link to={`${match.url}/register`}>添加</Link></Menu.Item>
+                            <Menu.Item key="/home/users"><NavLink exact to={`${match.url}/users`}>一览</NavLink></Menu.Item>
+                            <Menu.Item key="/home/register"><Link to={`${match.url}/register`}>添加</Link></Menu.Item>
                         </SubMenu>
                         <SubMenu
                             key="sub2"
@@ -75,7 +71,7 @@ class SiderDemo extends React.Component {
                         <Route path={`${match.url}/users`} component={Users}/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Web ©2018 Created by 我是谁，我在哪
+                        Web ©2018 Created by chenglin
                     </Footer>
                 </Layout>
             </Layout>
