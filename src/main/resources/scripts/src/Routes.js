@@ -12,11 +12,9 @@ class BasicRoute extends React.Component {
     }
 
     componentWillMount() {
-        const token = localStorage.getItem("my_token")
         const history = this.props.history
-        console.log("history history",history);
-        console.log("my_token my_token",token);
         axios.interceptors.request.use(function (config) {
+            const token = localStorage.getItem("my_token")
             console.log("1111111111111",token)
             if (config.url !== '/login' && token) {
                 console.log("2222222222222",config)
