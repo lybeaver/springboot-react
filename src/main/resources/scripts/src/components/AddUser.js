@@ -4,13 +4,18 @@ import { connect } from 'react-redux';
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
+    handleSave = (e) => {
+        e.preventDefault();
+       // const formvalues = this.refs.getForm;
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
-        console.log("drawerVisibledrawerVisible",this.props)
+        console.log("drawerVisible drawerVisible",this.props)
+
         return (
             <div>
                 <Drawer
-                    title="Create"
+                    title="添加成员"
                     width={720}
                     placement="right"
                     onClose={this.props.onClose}
@@ -22,93 +27,56 @@ class AddUserForm extends React.Component {
                         paddingBottom: 53,
                     }}
                 >
-                    <Form layout="vertical" hideRequiredMark>
+                    <Form layout="vertical" hideRequiredMark ref="getForm">
                         <Row gutter={16}>
                             <Col span={12}>
-                                <Form.Item label="Name">
+                                <Form.Item label="姓名">
                                     {getFieldDecorator('name', {
-                                        rules: [{ required: true, message: 'please enter user name' }],
-                                    })(<Input placeholder="please enter user name" />)}
+                                        rules: [{ required: true, message: '请输入姓名' }],
+                                    })(<Input placeholder="请输入姓名" />)}
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="Url">
+                                <Form.Item label="电话">
                                     {getFieldDecorator('url', {
-                                        rules: [{ required: true, message: 'please enter url' }],
+                                        rules: [{ required: true, message: '请输入手机号码' }],
                                     })(
-                                        <Input
-                                            style={{ width: '100%' }}
-                                            addonBefore="http://"
-                                            addonAfter=".com"
-                                            placeholder="please enter url"
-                                        />
+                                        <Input placeholder="请输入手机号码"/>
                                     )}
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row gutter={16}>
                             <Col span={12}>
-                                <Form.Item label="Owner">
+                                <Form.Item label="性别">
                                     {getFieldDecorator('owner', {
-                                        rules: [{ required: true, message: 'Please select an owner' }],
+                                        rules: [{ required: true, message: '请选择性别' }],
                                     })(
-                                        <Select placeholder="Please select an owner">
-                                            <Option value="xiao">Xiaoxiao Fu</Option>
-                                            <Option value="mao">Maomao Zhou</Option>
+                                        <Select placeholder="请选择性别">
+                                            <Option value="0">女</Option>
+                                            <Option value="1">男</Option>
                                         </Select>
                                     )}
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="Type">
+                                <Form.Item label="昵称">
                                     {getFieldDecorator('type', {
-                                        rules: [{ required: true, message: 'Please choose the type' }],
+                                        rules: [{ required: true, message: '请输入个昵称' }],
                                     })(
-                                        <Select placeholder="Please choose the type">
-                                            <Option value="private">Private</Option>
-                                            <Option value="public">Public</Option>
-                                        </Select>
+                                        <Input placeholder="请输入个昵称"/>
                                     )}
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row gutter={16}>
                             <Col span={12}>
-                                <Form.Item label="Approver">
-                                    {getFieldDecorator('approver', {
-                                        rules: [{ required: true, message: 'Please choose the approver' }],
-                                    })(
-                                        <Select placeholder="Please choose the approver">
-                                            <Option value="jack">Jack Ma</Option>
-                                            <Option value="tom">Tom Liu</Option>
-                                        </Select>
-                                    )}
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item label="DateTime">
+                                <Form.Item label="生日">
                                     {getFieldDecorator('dateTime', {
-                                        rules: [{ required: true, message: 'Please choose the dateTime' }],
+                                        rules: [{ required: true, message: '请选择日期' }],
                                     })(
-                                        <DatePicker.RangePicker
-                                            style={{ width: '100%' }}
-                                            getPopupContainer={trigger => trigger.parentNode}
-                                        />
+                                        <DatePicker placeholder="请选择日期"/>
                                     )}
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col span={24}>
-                                <Form.Item label="Description">
-                                    {getFieldDecorator('description', {
-                                        rules: [
-                                            {
-                                                required: true,
-                                                message: 'please enter url description',
-                                            },
-                                        ],
-                                    })(<Input.TextArea rows={4} placeholder="please enter url description" />)}
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -132,9 +100,9 @@ class AddUserForm extends React.Component {
                             }}
                             onClick={this.props.onClose}
                         >
-                            Cancel
+                            关闭
                         </Button>
-                        <Button onClick={this.props.onClose} type="primary">Submit</Button>
+                        <Button  type="primary" onClick={this.handleSave}>保存</Button>
                     </div>
                 </Drawer>
             </div>

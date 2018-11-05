@@ -3,6 +3,7 @@ import axios from 'axios'
 import {Table, Divider, Modal, Button, Select, Input, Col, Form} from 'antd';
 import { connect } from 'react-redux';
 import AddUser from '../components/AddUser';
+import moment from 'moment';
 const confirm = Modal.confirm;
 const InputGroup = Input.Group;
 const Option = Select.Option;
@@ -22,9 +23,13 @@ const columns = [{
         title: '昵称',
         dataIndex: 'loginName',
         key: 'loginName',
-    },{
-    title: '操作',
-    key: 'action'
+    }, {
+        title: '生日',
+        dataIndex: 'birthday',
+        key: 'birthday',
+    }, {
+        title: '操作',
+        key: 'action'
 }];
 function deleteConfirm()  {
     confirm({
@@ -88,8 +93,14 @@ class UserList extends React.Component {
     }
 
     componentDidMount() {
-        columns[4].render = (text, record) => (
+        columns[5].render = (text, record) => (
             <span>
+                {
+                    console.log("text",text)
+                }
+                {
+                    console.log("record",record)
+                }
                 <Button  onClick={this.props.showDrawer}>编辑</Button>
                 <Divider type="vertical" />
                 <Button  onClick={deleteConfirm}>删除</Button>
@@ -106,14 +117,17 @@ class UserList extends React.Component {
                             telephone: 0,
                             sex: '',
                             loginName:'',
+                            birthday:'',
                             id:''
                         }
+                        console.log("birthday birthday",moment(value.birthday).format('YYYY-MM-DD'))
                         item.id = value.id;
                         item.key = index.toString();
                         item.name = value.name;
                         item.telephone = value.telephone;
                         item.sex = value.sex === "1" ? "男":"女";
                         item.loginName = value.loginName;
+                        item.birthday = moment(value.birthday).format('YYYY-MM-DD');
                         result.push(item);
                       }
                    )

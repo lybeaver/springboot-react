@@ -32,23 +32,7 @@ public class InitController {
         userList = userService.getUsers(null,null);
         return Result.result(userList,null,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS);
     }
-    @RequestMapping(method=RequestMethod.GET,value="/getUser")
-    public Object getUser(tUser user, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        if (token == null) {
-            return null;
-        } else {
 
-        }
-        tUser loginUser = null;
-        if (StringUtils.isNotBlank(user.getName()) && StringUtils.isNotBlank(user.getPassword())) {
-            List<tUser> userList = userService.getUsers(user.getName(),user.getPassword());
-            if (userList != null && userList.size() > 0) {
-                loginUser = userList.get(0);
-            }
-        }
-        return loginUser;
-    }
     @RequestMapping(value = "/login",headers = "Accept=application/json",method = RequestMethod.POST)
     @ResponseBody
     public String login(@RequestBody tUser user) {
@@ -65,16 +49,16 @@ public class InitController {
         }
         return token;
     }
-
-    @RequestMapping(value = "/loginMap",method = RequestMethod.POST)
-    @ResponseBody
-    public String loginMap(@RequestBody String user) {
-        tUser loginUser = null;
-        String token = null;
-        if (user != null) {
-            System.out.println("mapamp"+user);
+    @RequestMapping(value = "/addUser",method = RequestMethod.PUT)
+    public Result addUser(tUser user) {
+        tUser newUser = userService.updateUser(user);
+        if (newUser == null) {
+            List<tUser> userList = userService.getUsers(null,null);
+            return Result.result(userList,null,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT);
+        } else {
+            List<tUser> userList = userService.getUsers(null,null);
+            return Result.result(userList,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
         }
-        return token;
     }
 
 }

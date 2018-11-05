@@ -1,7 +1,7 @@
 const SHOW_DRAWER = 'SHOW_DRAWER';
 const ON_CLOSE = 'ON_CLOSE';
 
-export function showVisible (state = {drawerVisible: false},action) {
+export function showVisible (state = {drawerVisible: false, type:'', userdata:{}},action) {
     switch(action.type){
         case SHOW_DRAWER:
             return {drawerVisible: true};

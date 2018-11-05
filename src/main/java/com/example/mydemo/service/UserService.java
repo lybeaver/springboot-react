@@ -14,6 +14,12 @@ public class UserService {
     @Autowired
     private tUserMapper userMapper;
 
+    /**
+     *
+     * @param userName
+     * @param password
+     * @return 返回用户
+     */
     public List<tUser> getUsers(String userName, String password) {
         tUserExample userExample = new tUserExample();
         if (userName == null && password == null) {
@@ -23,5 +29,19 @@ public class UserService {
         }
         List<tUser> users = userMapper.selectByExample(userExample);
         return users;
+    }
+
+    /**
+     *
+     * @param user
+     * @return 更新后的用户
+     */
+    public tUser updateUser(tUser user) {
+        tUser upUser = userMapper.selectByPrimaryKey(user.getId());
+        if (upUser != null && upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
+            userMapper.updateByPrimaryKeySelective(user);
+            upUser = userMapper.selectByPrimaryKey(user.getId());
+        }
+        return upUser;
     }
 }
