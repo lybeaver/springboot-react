@@ -16,7 +16,8 @@ import java.util.List;
 public class InitController {
     @Autowired
     private UserService userService;
-    @RequestMapping(method=RequestMethod.GET,headers = "Accept=application/json",value="/getUserList")
+
+    @RequestMapping(value="/getUserList",headers = "Accept=application/json",method=RequestMethod.GET)
     public Result init(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         List<tUser> userList = null;
@@ -31,6 +32,15 @@ public class InitController {
         }
         userList = userService.getUsers(null,null);
         return Result.result(userList,null,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS);
+    }
+
+    @RequestMapping(value="/getUser/{id}",method = RequestMethod.GET)
+    public Result getUser(@PathVariable Long id) {
+        tUser user = userService.getUser(id);
+        if (user == null) {
+            return Result.result(null,null,false, StatusCode.FIND_ERROR, ResultType.FIND_FAULT);
+        }
+        return Result.result(user,null,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS);
     }
 
     @RequestMapping(value = "/login",headers = "Accept=application/json",method = RequestMethod.POST)
@@ -49,6 +59,7 @@ public class InitController {
         }
         return token;
     }
+
     @RequestMapping(value = "/addUser",method = RequestMethod.PUT)
     public Result addUser(tUser user) {
         tUser newUser = userService.updateUser(user);

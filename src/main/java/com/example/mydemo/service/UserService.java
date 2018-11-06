@@ -44,4 +44,18 @@ public class UserService {
         }
         return upUser;
     }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+     public tUser getUser(Long id) {
+         tUser user = userMapper.selectByPrimaryKey(id);
+         if (user != null && user.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
+             return user;
+         } else {
+             return null;
+         }
+     }
 }

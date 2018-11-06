@@ -1,44 +1,62 @@
-import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker } from 'antd';
+import {Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon} from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
+import axios from "axios";
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     handleSave = (e) => {
         e.preventDefault();
-       // const formvalues = this.refs.getForm;
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ',values);
+            }
+        });
     }
     render() {
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator,setFieldsValue } = this.props.form;
+        const user = (this.props.state.showUserInfo.user||{}).text;
+        const typeName = (this.props.state.showUserInfo.user||{}).typeItem === 'ADD' ? '添加成员':'编辑成员';
+        // setFieldsValue(user);
+        // setFieldsValue({'name':(user||{}).name});
+        // this.props.form.setFields({
+        //     user: {
+        //         value: values.user,
+        //         errors: [new Error('forbid ha')],
+        //     },
+        // });
         console.log("drawerVisible drawerVisible",this.props)
-
         return (
             <div>
                 <Drawer
-                    title="添加成员"
+                    title={typeName}
                     width={720}
                     placement="right"
-                    onClose={this.props.onClose}
+                    onClose={this.props.onClose.bind(this)}
                     maskClosable={false}
-                    visible={this.props.state.showVisible.drawerVisible}
+                    visible={this.props.state.showUserInfo.drawerVisible}
                     style={{
                         height: 'calc(100% - 55px)',
                         overflow: 'auto',
                         paddingBottom: 53,
                     }}
                 >
-                    <Form layout="vertical" hideRequiredMark ref="getForm">
+                    <Form layout="vertical" hideRequiredMark>
+                        <Input  type="hidden" className={"id"} />
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item label="姓名">
                                     {getFieldDecorator('name', {
                                         rules: [{ required: true, message: '请输入姓名' }],
-                                    })(<Input placeholder="请输入姓名" />)}
+                                    })(<Input placeholder="请输入姓名"/>)}
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item label="电话">
-                                    {getFieldDecorator('url', {
+                                    {getFieldDecorator('telephone', {
                                         rules: [{ required: true, message: '请输入手机号码' }],
                                     })(
                                         <Input placeholder="请输入手机号码"/>
@@ -49,7 +67,7 @@ class AddUserForm extends React.Component {
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item label="性别">
-                                    {getFieldDecorator('owner', {
+                                    {getFieldDecorator('sex', {
                                         rules: [{ required: true, message: '请选择性别' }],
                                     })(
                                         <Select placeholder="请选择性别">
@@ -61,7 +79,7 @@ class AddUserForm extends React.Component {
                             </Col>
                             <Col span={12}>
                                 <Form.Item label="昵称">
-                                    {getFieldDecorator('type', {
+                                    {getFieldDecorator('loginName', {
                                         rules: [{ required: true, message: '请输入个昵称' }],
                                     })(
                                         <Input placeholder="请输入个昵称"/>
@@ -72,7 +90,7 @@ class AddUserForm extends React.Component {
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item label="生日">
-                                    {getFieldDecorator('dateTime', {
+                                    {getFieldDecorator('birthday', {
                                         rules: [{ required: true, message: '请选择日期' }],
                                     })(
                                         <DatePicker placeholder="请选择日期"/>
@@ -94,14 +112,7 @@ class AddUserForm extends React.Component {
                             borderRadius: '0 0 4px 4px',
                         }}
                     >
-                        <Button
-                            style={{
-                                marginRight: 8,
-                            }}
-                            onClick={this.props.onClose}
-                        >
-                            关闭
-                        </Button>
+                        <Button style={{marginRight: 8}} onClick={this.props.onClose.bind(this)}>关闭</Button>
                         <Button  type="primary" onClick={this.handleSave}>保存</Button>
                     </div>
                 </Drawer>
@@ -116,10 +127,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         onClose:function(){
+            this.props.form.resetFields();
             dispatch({ type:"ON_CLOSE"});
         }
     };
 }
 // const AddUser = Form.create()(AddUserForm);
-let AddUser = connect(mapStateToProps,mapDispatchToProps)(Form.create()(AddUserForm));
+const AddUser = connect(mapStateToProps,mapDispatchToProps)(Form.create()(AddUserForm));
 export default AddUser;

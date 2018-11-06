@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Table, Divider, Modal, Button, Select, Input, Col, Form} from 'antd';
+import {Table, Divider, Modal, Button, Select, Input, Col, Form, Alert} from 'antd';
 import { connect } from 'react-redux';
 import AddUser from '../components/AddUser';
 import moment from 'moment';
@@ -58,6 +58,9 @@ class UserList extends React.Component {
         this.handleOk = this.handleOk.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
         this.state = {
+            mesShow: false,
+            success: false,
+            message: "",
             data: [],
             visible: false,
             drawerVisible: false
@@ -101,7 +104,7 @@ class UserList extends React.Component {
                 {
                     console.log("record",record)
                 }
-                <Button  onClick={this.props.showDrawer}>编辑</Button>
+                <Button  onClick={this.props.showDrawer.bind(this,'EDIT',text)}>编辑</Button>
                 <Divider type="vertical" />
                 <Button  onClick={deleteConfirm}>删除</Button>
             </span>
@@ -120,7 +123,6 @@ class UserList extends React.Component {
                             birthday:'',
                             id:''
                         }
-                        console.log("birthday birthday",moment(value.birthday).format('YYYY-MM-DD'))
                         item.id = value.id;
                         item.key = index.toString();
                         item.name = value.name;
@@ -176,8 +178,11 @@ class UserList extends React.Component {
                    <Button type="primary" style={{
                        marginRight: 8,
                    }} icon="search">搜索</Button>
-                   <Button type="primary" onClick={this.props.showDrawer}>添加成员</Button>
+                   <Button type="primary" style={{
+                       marginRight: 8,
+                   }} onClick={this.props.showDrawer.bind(this,'ADD')}>添加成员</Button>
                    </div>
+                   {this.state.mesShow ? <div><Alert message={this.state.message} type={this.state.success?"success":"error"} showIcon /></div>:""}
                    <AddUser/>
                </InputGroup>
                <div style={{height:20}}/>
@@ -191,8 +196,24 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        showDrawer:function(){
-            dispatch({ type:"SHOW_DRAWER"});
+        showDrawer:function(typeItem, text){
+            console.log("type type type",typeItem);
+            console.log("text text text",text);
+            if (typeItem === 'EDIT') {
+                axios.get("http://localhost:8080/public/getUser/"+text.id)
+                    .then(res=>{
+                        if (res.data.code === '501') {
+                            this.setState({mesShow: true,message:res.data.message,success:res.data.success});
+                            console.log("errrrrrrrrrrrrrrr",this.state)
+                        } else {
+                            this.setState({mesShow: true,message:res.data.message,success:res.data.success});
+                            // console.log("errrrrrrrrrrrrrrr222222",this.state)
+                            // console.log("resultttt",res.data)
+                        }
+                    });
+            } else {
+                dispatch({ type:"SHOW_DRAWER",typeItem,text});
+            }
         }
     };
 }
