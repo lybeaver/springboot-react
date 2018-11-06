@@ -28,6 +28,7 @@ class NormalLoginForm extends React.Component{
                 this.setState({loadText: "登录中..."});
                 axios.post("http://localhost:8080/public/login",values)
                 .then(res=>{
+                    this.setState({loading: false});
                     if (res.data === '') {
                         this.setState({loginError: true});
                     } else {
@@ -40,52 +41,59 @@ class NormalLoginForm extends React.Component{
                         this.props.login(this.props.history, initState);
                     }
                 });
+            } else {
+                this.setState({loading: false});
+                this.setState({loginError: true});
             }
         });
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        return (
-            <div className="login">
-                <div className="login-form">
-                    <div className="login-logo">
-                        <div className="login-name">优雅</div>
-                    </div>
+        if (this.state.loading === true) {
+            return (this.state.loadText);
+        } else {
+            return (
+                <div className="login">
+                    <div className="login-form">
+                        <div className="login-logo">
+                            <div className="login-name">优雅</div>
+                        </div>
 
-                    <Form onSubmit={this.handleSubmit}>
-                        <FormItem>
-                            {getFieldDecorator('loginName', {
-                                rules: [{ required: true, message: '请输入用户名' }],
-                            })(
-                                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
-                            )}
-                        </FormItem>
-                        <FormItem>
-                            {getFieldDecorator('password', {
-                                rules: [{ required: true, message: '请输入密码' }],
-                            })(
-                                <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
-                            )}
-                        </FormItem>
-                        {this.state.loginError ? <div><Alert message="登录信息不正确" type="error" showIcon /></div>:''}
-                        <FormItem>
-                            {getFieldDecorator('remember', {
-                                valuePropName: 'checked',
-                                initialValue: true,
-                            })(
-                                <Checkbox>记住我</Checkbox>
-                            )}
-                            <a className="login-form-forgot" href="">忘记密码</a>
-                            <Button type="primary" htmlType="submit" className="login-form-button">
-                                登 录
-                            </Button>
-                            <Route><Link to='/register'>去注册</Link></Route>
-                        </FormItem>
-                    </Form>
+                        <Form onSubmit={this.handleSubmit}>
+                            <FormItem>
+                                {getFieldDecorator('loginName', {
+                                    rules: [{ required: true, message: '请输入用户名' }],
+                                })(
+                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                                )}
+                            </FormItem>
+                            <FormItem>
+                                {getFieldDecorator('password', {
+                                    rules: [{ required: true, message: '请输入密码' }],
+                                })(
+                                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                                )}
+                            </FormItem>
+                            {this.state.loginError ? <div><Alert message="登录信息不正确" type="error" showIcon /></div>:''}
+                            <FormItem>
+                                {getFieldDecorator('remember', {
+                                    valuePropName: 'checked',
+                                    initialValue: true,
+                                })(
+                                    <Checkbox>记住我</Checkbox>
+                                )}
+                                <a className="login-form-forgot" href="">忘记密码</a>
+                                <Button type="primary" htmlType="submit" className="login-form-button">
+                                    登 录
+                                </Button>
+                                <Route><Link to='/register'>去注册</Link></Route>
+                            </FormItem>
+                        </Form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 
