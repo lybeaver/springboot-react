@@ -7,6 +7,7 @@ const { Option } = Select;
 class AddUserForm extends React.Component {
     constructor(props) {
         super(props);
+        console.log("props props",props);
     }
     handleSave = (e) => {
         e.preventDefault();
@@ -18,8 +19,10 @@ class AddUserForm extends React.Component {
     }
     render() {
         const { getFieldDecorator,setFieldsValue } = this.props.form;
-        const user = (this.props.state.showUserInfo.user||{}).text;
-        const typeName = (this.props.state.showUserInfo.user||{}).typeItem === 'ADD' ? '添加成员':'编辑成员';
+        const userInfo = this.props.state.showUserInfo.user;
+        const user = (userInfo || {}).text;
+        const typeName = (userInfo || {}).typeItem === 'ADD' ? '添加成员':'编辑成员';
+        console.log("user user user",user);
         // setFieldsValue(user);
         // setFieldsValue({'name':(user||{}).name});
         // this.props.form.setFields({
@@ -28,6 +31,7 @@ class AddUserForm extends React.Component {
         //         errors: [new Error('forbid ha')],
         //     },
         // });
+        // this.props.form.setFieldsValue({});
         console.log("drawerVisible drawerVisible",this.props)
         return (
             <div>
@@ -113,7 +117,7 @@ class AddUserForm extends React.Component {
                         }}
                     >
                         <Button style={{marginRight: 8}} onClick={this.props.onClose.bind(this)}>关闭</Button>
-                        <Button  type="primary" onClick={this.handleSave}>保存</Button>
+                        <Button  type="primary" onClick={this.handleSave.bind(this)}>保存</Button>
                     </div>
                 </Drawer>
             </div>

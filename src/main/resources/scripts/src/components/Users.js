@@ -78,40 +78,32 @@ class UserList extends React.Component {
         this.setState({
             visible: true,
         });
-
-    }
+    };
 
     handleOk = (e) => {
         console.log(e);
         this.setState({
             visible: false,
         });
-    }
+    };
 
     handleCancel = (e) => {
         console.log(e);
         this.setState({
             visible: false,
         });
-    }
+    };
 
     componentDidMount() {
         columns[5].render = (text, record) => (
             <span>
-                {
-                    console.log("text",text)
-                }
-                {
-                    console.log("record",record)
-                }
                 <Button  onClick={this.props.showDrawer.bind(this,'EDIT',text)}>编辑</Button>
                 <Divider type="vertical" />
                 <Button  onClick={deleteConfirm}>删除</Button>
             </span>
-        )
+        );
         axios.get("http://localhost:8080/public/getUserList")
               .then(response=>{
-                  console.log(response.data)
                   let result = [];
                   (response.data.data || []).map((value,index) => {
                         const item = {
@@ -132,7 +124,7 @@ class UserList extends React.Component {
                         item.birthday = moment(value.birthday).format('YYYY-MM-DD');
                         result.push(item);
                       }
-                   )
+                   );
                   this.setState({data:result});
               })
     }
@@ -203,12 +195,10 @@ function mapDispatchToProps(dispatch) {
                 axios.get("http://localhost:8080/public/getUser/"+text.id)
                     .then(res=>{
                         if (res.data.code === '501') {
-                            this.setState({mesShow: true,message:res.data.message,success:res.data.success});
+                            this.setState({mesShow: true, message:res.data.message, success:res.data.success});
                             console.log("errrrrrrrrrrrrrrr",this.state)
                         } else {
-                            this.setState({mesShow: true,message:res.data.message,success:res.data.success});
-                            // console.log("errrrrrrrrrrrrrrr222222",this.state)
-                            // console.log("resultttt",res.data)
+                            dispatch({ type:"SHOW_DRAWER",typeItem,text});
                         }
                     });
             } else {

@@ -28,8 +28,8 @@ class NormalLoginForm extends React.Component{
                 this.setState({loadText: "登录中..."});
                 axios.post("http://localhost:8080/public/login",values)
                 .then(res=>{
-                    this.setState({loading: false});
                     if (res.data === '') {
+                        this.setState({loading: false});
                         this.setState({loginError: true});
                     } else {
                         console.log("store",this.props)
@@ -65,14 +65,14 @@ class NormalLoginForm extends React.Component{
                                 {getFieldDecorator('loginName', {
                                     rules: [{ required: true, message: '请输入用户名' }],
                                 })(
-                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入用户名" />
                                 )}
                             </FormItem>
                             <FormItem>
                                 {getFieldDecorator('password', {
                                     rules: [{ required: true, message: '请输入密码' }],
                                 })(
-                                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="请输入密码" />
                                 )}
                             </FormItem>
                             {this.state.loginError ? <div><Alert message="登录信息不正确" type="error" showIcon /></div>:''}
