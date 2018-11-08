@@ -60,15 +60,13 @@ public class InitController {
         return token;
     }
 
-    @RequestMapping(value = "/addUser",method = RequestMethod.PUT)
-    public Result addUser(tUser user) {
-        tUser newUser = userService.updateUser(user);
+    @RequestMapping(value = "/addUser",method = RequestMethod.POST)
+    public Result addUser(tUser user, String doType) {
+        tUser newUser = userService.saveUser(user,doType);
         if (newUser == null) {
-            List<tUser> userList = userService.getUsers(null,null);
-            return Result.result(userList,null,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT);
+            return Result.result(null,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
         } else {
-            List<tUser> userList = userService.getUsers(null,null);
-            return Result.result(userList,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+            return Result.result(newUser,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
         }
     }
 

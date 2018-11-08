@@ -81,14 +81,12 @@ class UserList extends React.Component {
     };
 
     handleOk = (e) => {
-        console.log(e);
         this.setState({
             visible: false,
         });
     };
 
     handleCancel = (e) => {
-        console.log(e);
         this.setState({
             visible: false,
         });
@@ -97,9 +95,9 @@ class UserList extends React.Component {
     componentDidMount() {
         columns[5].render = (text, record) => (
             <span>
-                <Button  onClick={this.props.showDrawer.bind(this,'EDIT',text)}>编辑</Button>
+                <Button  onClick={ this.props.showDrawer.bind(this,'EDIT',text) }>编辑</Button>
                 <Divider type="vertical" />
-                <Button  onClick={deleteConfirm}>删除</Button>
+                <Button  onClick={ deleteConfirm }>删除</Button>
             </span>
         );
         axios.get("http://localhost:8080/public/getUserList")
@@ -174,11 +172,11 @@ class UserList extends React.Component {
                        marginRight: 8,
                    }} onClick={this.props.showDrawer.bind(this,'ADD')}>添加成员</Button>
                    </div>
-                   {this.state.mesShow ? <div><Alert message={this.state.message} type={this.state.success?"success":"error"} showIcon /></div>:""}
+                   {this.state.mesShow ? <div><Alert message={ this.state.message } type={ this.state.success?"success":"error" } showIcon /></div>:""}
                    <AddUser/>
                </InputGroup>
-               <div style={{height:20}}/>
-           <Table columns={columns} dataSource={this.state.data}/>
+               <div style={{ height:20 }}/>
+           <Table columns={ columns } dataSource={ this.state.data }/>
        </div>);
     }
 }
@@ -207,6 +205,14 @@ function mapDispatchToProps(dispatch) {
         }
     };
 }
+
+// function mapPropsToFields(props) {
+//     return {
+//         description: Form.createFormField({
+//             value: props.item.description
+//         })
+//     }
+// }
 
 let UserListRedux = connect(mapStateToProps,mapDispatchToProps)(UserList);
 export default UserListRedux;

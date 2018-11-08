@@ -7,6 +7,7 @@ import com.example.mydemo.mapper.tUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -36,13 +37,24 @@ public class UserService {
      * @param user
      * @return 更新后的用户
      */
-    public tUser updateUser(tUser user) {
-        tUser upUser = userMapper.selectByPrimaryKey(user.getId());
-        if (upUser != null && upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
-            userMapper.updateByPrimaryKeySelective(user);
-            upUser = userMapper.selectByPrimaryKey(user.getId());
+    public tUser saveUser(tUser user, String doType) {
+        if (doType == "ADD") {
+            user.setCreateTime(new Date());
+            user.setCounts(Long.parseLong("0"));
+            user.setCreateById(new Long(1001));
+            userMapper.insertSelective(user);
+            return user;
+        } else {
+            tUser upUser = userMapper.selectByPrimaryKey(user.getId());
+            if (upUser != null && upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
+                user.setUpdateById(new Long(1001));
+                user.setUpdateTime(new Date());
+                user.setCounts(user.getCounts()+1);
+                userMapper.updateByPrimaryKeySelective(user);
+                upUser = userMapper.selectByPrimaryKey(user.getId());
+            }
+            return upUser;
         }
-        return upUser;
     }
 
     /**

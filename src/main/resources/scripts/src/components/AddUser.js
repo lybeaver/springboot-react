@@ -5,6 +5,7 @@ import axios from "axios";
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
+
     constructor(props) {
         super(props);
         console.log("props props",props);
@@ -12,17 +13,43 @@ class AddUserForm extends React.Component {
     handleSave = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ',values);
-            }
+            console.log('Received values of form: ',values);
+            // if (!err) {
+            //     axios.post("http://localhost:8080/public/addUser",values)
+            //         .then(res => {
+            //                 if (res.data.success) {
+            //                     this.props.onClose("",values);
+            //
+            //                 }
+            //             }
+            //         )
+            //     console.log('Received values of form: ',values);
+            // }
+        });
+    }
+    componentWillMount() {
+        const { setFieldsValue } = this.props.form;
+        const userInfo = this.props.state.showUserInfo.user;
+        const user = (userInfo || {}).text;
+        console.log("componentWillMount componentWillMount",user);
+        setFieldsValue({
+            name:(user || {}).name,
+            telephone:(user || {}).telephone,
+            sex:(user || {}).sex,
+            loginName:(user || {}).loginName,
+            birthday:(user || {}).birthday
         });
     }
     render() {
-        const { getFieldDecorator,setFieldsValue } = this.props.form;
+        const { getFieldDecorator } = this.props.form;
         const userInfo = this.props.state.showUserInfo.user;
         const user = (userInfo || {}).text;
         const typeName = (userInfo || {}).typeItem === 'ADD' ? '添加成员':'编辑成员';
         console.log("user user user",user);
+
+        // getFieldDecorator((id,options) => {
+        //     console.log("options options",id,options)
+        // })
         // setFieldsValue(user);
         // setFieldsValue({'name':(user||{}).name});
         // this.props.form.setFields({
@@ -49,11 +76,11 @@ class AddUserForm extends React.Component {
                     }}
                 >
                     <Form layout="vertical" hideRequiredMark>
-                        <Input  type="hidden" className={"id"} />
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item label="姓名">
                                     {getFieldDecorator('name', {
+                                        initialValue: (user||{}).name,
                                         rules: [{ required: true, message: '请输入姓名' }],
                                     })(<Input placeholder="请输入姓名"/>)}
                                 </Form.Item>
@@ -61,6 +88,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="电话">
                                     {getFieldDecorator('telephone', {
+                                        initialValue: (user||{}).telephone,
                                         rules: [{ required: true, message: '请输入手机号码' }],
                                     })(
                                         <Input placeholder="请输入手机号码"/>
@@ -72,6 +100,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="性别">
                                     {getFieldDecorator('sex', {
+                                        initialValue: (user||{}).sex,
                                         rules: [{ required: true, message: '请选择性别' }],
                                     })(
                                         <Select placeholder="请选择性别">
@@ -84,6 +113,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="昵称">
                                     {getFieldDecorator('loginName', {
+                                        initialValue: (user||{}).loginName,
                                         rules: [{ required: true, message: '请输入个昵称' }],
                                     })(
                                         <Input placeholder="请输入个昵称"/>
@@ -130,9 +160,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onClose:function(){
+        onClose:function(typeItem, text){
             this.props.form.resetFields();
-            dispatch({ type:"ON_CLOSE"});
+            dispatch({ type:"ON_CLOSE",typeItem,text});
         }
     };
 }
