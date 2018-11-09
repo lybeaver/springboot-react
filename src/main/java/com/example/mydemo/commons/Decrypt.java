@@ -29,7 +29,7 @@ public final class Decrypt {
                     .build(); //Reusable verifier instance
             jwt = verifier.verify(token);
         } catch (JWTVerificationException exception){
-            //Invalid signature/claims
+            // Invalid signature/claims
             exception.printStackTrace();
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block

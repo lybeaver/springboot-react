@@ -1,6 +1,7 @@
-import {Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Icon} from 'antd';
+import {Drawer, Form, Button, Col, Row, Input, Select, DatePicker,Avatar, Icon} from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import axios from "axios";
 const { Option } = Select;
 
@@ -10,41 +11,35 @@ class AddUserForm extends React.Component {
         super(props);
         console.log("props props",props);
     }
-    handleSave = (e) => {
-        e.preventDefault();
+
+    handleSave = (doType,id) => {
+        // e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log('Received values of form: ',values);
-            // if (!err) {
-            //     axios.post("http://localhost:8080/public/addUser",values)
-            //         .then(res => {
-            //                 if (res.data.success) {
-            //                     this.props.onClose("",values);
-            //
-            //                 }
-            //             }
-            //         )
-            //     console.log('Received values of form: ',values);
-            // }
+            console.log('Received values of form: ',values,doType,id);
+            console.log("value value",{...values,di:id})
+            if (!err) {
+                const url = "http://localhost:8080/public/"+(doType==='ADD'?"addUser":"updateUser");
+                values.id = id;
+                axios.post(url,values)
+                    .then(res => {
+                            const result = res.data || {};
+                            if (res.data.success) {
+                                console.log("success axios success",this.props,res.data.data,res.data.success,res.data.message);
+                                this.props.onClose("",result.data,true,result.message,true,this.props.form);
+                                // function(typeItem, user, success, message)
+                            }
+                        }
+                    )
+                console.log('Received values of form: ',values);
+            }
         });
     }
-    componentWillMount() {
-        const { setFieldsValue } = this.props.form;
-        const userInfo = this.props.state.showUserInfo.user;
-        const user = (userInfo || {}).text;
-        console.log("componentWillMount componentWillMount",user);
-        setFieldsValue({
-            name:(user || {}).name,
-            telephone:(user || {}).telephone,
-            sex:(user || {}).sex,
-            loginName:(user || {}).loginName,
-            birthday:(user || {}).birthday
-        });
-    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
-        const userInfo = this.props.state.showUserInfo.user;
-        const user = (userInfo || {}).text;
-        const typeName = (userInfo || {}).typeItem === 'ADD' ? '添加成员':'编辑成员';
+        const user = this.props.state.showUserInfo.user;
+        const doType = this.props.state.showUserInfo.typeItem;
+        const typeName = doType === 'ADD' ? '添加成员':'编辑成员';
         console.log("user user user",user);
 
         // getFieldDecorator((id,options) => {
@@ -76,6 +71,13 @@ class AddUserForm extends React.Component {
                     }}
                 >
                     <Form layout="vertical" hideRequiredMark>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item>
+                                    <Avatar shape="square" size={64} icon="user" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item label="姓名">
@@ -125,6 +127,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="生日">
                                     {getFieldDecorator('birthday', {
+                                        initialValue:user?moment((user||{}).birthday, 'YYYY-MM-DD'):undefined,
                                         rules: [{ required: true, message: '请选择日期' }],
                                     })(
                                         <DatePicker placeholder="请选择日期"/>
@@ -147,7 +150,7 @@ class AddUserForm extends React.Component {
                         }}
                     >
                         <Button style={{marginRight: 8}} onClick={this.props.onClose.bind(this)}>关闭</Button>
-                        <Button  type="primary" onClick={this.handleSave.bind(this)}>保存</Button>
+                        <Button  type="primary" onClick={this.handleSave.bind(this,doType,(user||{}).id)}>保存</Button>
                     </div>
                 </Drawer>
             </div>
@@ -160,9 +163,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onClose:function(typeItem, text){
-            this.props.form.resetFields();
-            dispatch({ type:"ON_CLOSE",typeItem,text});
+        onClose:function(typeItem, user, success, message,showMessage, form){
+            console.log("close close",this.props);
+            if (success) {
+                form.resetFields();
+            } else {
+                this.props.form.resetFields();
+            }
+            dispatch({ type:"ON_CLOSE",typeItem,user,success, message,showMessage });
         }
     };
 }

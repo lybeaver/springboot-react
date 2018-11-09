@@ -14,7 +14,7 @@ public final class Encrypt {
     public static String getToken(final String userName, final String name) {
         String token = null;
         try {
-            Date expiresAt = new Date(System.currentTimeMillis() + 24L * 60L * 3600L * 1000L);
+            Date expiresAt = new Date(System.currentTimeMillis() + 15 * 60 * 1000);
             token = JWT.create()
                     .withIssuer("auth0")
                     .withClaim("username", userName)

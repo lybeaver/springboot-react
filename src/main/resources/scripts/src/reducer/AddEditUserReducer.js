@@ -4,9 +4,9 @@ const ON_CLOSE = 'ON_CLOSE';
 export function showUserInfo (state = {drawerVisible: false},action) {
     switch(action.type){
         case SHOW_DRAWER:
-            return {drawerVisible: true, user:action};
+            return {drawerVisible: true, user: action.text,success:action.success, message:action.message,typeItem:action.typeItem,showMessage:action.showMessage};
         case ON_CLOSE:
-            return {drawerVisible: false};
+            return {drawerVisible: false, user: action.text,success:action.success, message:action.message,typeItem:action.typeItem,showMessage:action.showMessage};
         default:
             return {drawerVisible: false};
     }

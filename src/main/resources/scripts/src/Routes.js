@@ -32,11 +32,13 @@ class BasicRoute extends React.Component {
             console.log("response response",response)
             return response;
         },function (error) {
-            localStorage.removeItem('my_token')
-            console.log("error",error);
-            setTimeout(() => {
-                history.push('/login')
-            },1)
+            // localStorage.removeItem('my_token')
+            console.log("error error",Promise.reject(error));
+            if (error) {
+                setTimeout(() => {
+                    history.push('/home/found404')
+                },1)
+            }
             return Promise.reject(error);
         })
     }

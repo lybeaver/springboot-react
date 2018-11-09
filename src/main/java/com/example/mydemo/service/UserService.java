@@ -2,7 +2,9 @@ package com.example.mydemo.service;
 
 import com.example.mydemo.beans.tUser;
 import com.example.mydemo.beans.tUserExample;
+import com.example.mydemo.commons.Aes;
 import com.example.mydemo.commons.MsgContant;
+import com.example.mydemo.commons.ResultType;
 import com.example.mydemo.mapper.tUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,10 @@ public class UserService {
             user.setCreateTime(new Date());
             user.setCounts(Long.parseLong("0"));
             user.setCreateById(new Long(1001));
+            user.setUpdateById(new Long(1001));
+            user.setUpdateTime(new Date());
+            user.setDeleteFlg(MsgContant.DEL_FLG.COMMON.toString());
+            user.setPassword(Aes.aesEncrypt("123456"));
             userMapper.insertSelective(user);
             return user;
         } else {
@@ -49,7 +55,7 @@ public class UserService {
             if (upUser != null && upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
                 user.setUpdateById(new Long(1001));
                 user.setUpdateTime(new Date());
-                user.setCounts(user.getCounts()+1);
+                user.setCounts(upUser.getCounts()+1);
                 userMapper.updateByPrimaryKeySelective(user);
                 upUser = userMapper.selectByPrimaryKey(user.getId());
             }

@@ -5,6 +5,8 @@ import com.example.mydemo.beans.tUser;
 import com.example.mydemo.commons.*;
 import com.example.mydemo.service.UserService;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import java.util.List;
 public class InitController {
     @Autowired
     private UserService userService;
-
+    Logger log = LoggerFactory.getLogger(getClass());
     @RequestMapping(value="/getUserList",headers = "Accept=application/json",method=RequestMethod.GET)
     public Result init(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
@@ -49,7 +51,7 @@ public class InitController {
         tUser loginUser = null;
         String token = null;
         if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())) {
-            List<tUser> userList = userService.getUsers(user.getLoginName(),user.getPassword());
+            List<tUser> userList = userService.getUsers(user.getLoginName(), Aes.aesEncrypt(user.getPassword()));
             if (userList != null && userList.size() > 0) {
                 loginUser = userList.get(0);
             }
@@ -61,12 +63,22 @@ public class InitController {
     }
 
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
-    public Result addUser(tUser user, String doType) {
-        tUser newUser = userService.saveUser(user,doType);
+    public Result addUser(@RequestBody tUser user) {
+        tUser newUser = userService.saveUser(user,"ADD");
         if (newUser == null) {
             return Result.result(null,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
         } else {
             return Result.result(newUser,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+        }
+    }
+
+    @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
+    public Result updateUser(@RequestBody tUser user) {
+        tUser upUser = userService.saveUser(user,"EDIT");
+        if (upUser == null) {
+            return Result.result(null,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+        } else {
+            return Result.result(upUser,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
         }
     }
 

@@ -58,9 +58,6 @@ class UserList extends React.Component {
         this.handleOk = this.handleOk.bind(this)
         this.handleCancel = this.handleCancel.bind(this)
         this.state = {
-            mesShow: false,
-            success: false,
-            message: "",
             data: [],
             visible: false,
             drawerVisible: false
@@ -72,7 +69,6 @@ class UserList extends React.Component {
             drawerVisible: true,
         });
     };
-
 
     showModal = () => {
         this.setState({
@@ -135,16 +131,17 @@ class UserList extends React.Component {
         }
     }
     render(){
+        const prop = this.props.state.showUserInfo;
        return (
            <div>
                <div>
                <Modal
-                   title="信息编辑"
+                   title = "信息编辑"
                    visible = {this.state.visible}
-                   onOk={this.handleOk}
-                   onCancel={this.handleCancel}
-                   okText='保存'
-                   cancelText='返回'
+                   onOk = {this.handleOk}
+                   onCancel = {this.handleCancel}
+                   okText = '保存'
+                   cancelText = '返回'
                >
                    <p>Some contents...</p>
                    <p>Some contents...</p>
@@ -159,7 +156,7 @@ class UserList extends React.Component {
                    <Input style={{ width: 150}} placeholder="电话" />
                    </Col>
                    <Col span={81}>
-                   <Select defaultValue="1" style={{ width: 80}}>
+                   <Select defaultValue="1" style={{ width: 80 }}>
                        <Option value="1">男</Option>
                        <Option value="0">女</Option>
                    </Select>
@@ -170,9 +167,9 @@ class UserList extends React.Component {
                    }} icon="search">搜索</Button>
                    <Button type="primary" style={{
                        marginRight: 8,
-                   }} onClick={this.props.showDrawer.bind(this,'ADD')}>添加成员</Button>
+                   }} onClick = { this.props.showDrawer.bind(this,'ADD',undefined) }>添加成员</Button>
                    </div>
-                   {this.state.mesShow ? <div><Alert message={ this.state.message } type={ this.state.success?"success":"error" } showIcon /></div>:""}
+                   { prop.showMessage ? <div><Alert message={ prop.message } type={ prop.success ? "success" : "error" } showIcon /></div> : "" }
                    <AddUser/>
                </InputGroup>
                <div style={{ height:20 }}/>
@@ -193,26 +190,18 @@ function mapDispatchToProps(dispatch) {
                 axios.get("http://localhost:8080/public/getUser/"+text.id)
                     .then(res=>{
                         if (res.data.code === '501') {
-                            this.setState({mesShow: true, message:res.data.message, success:res.data.success});
-                            console.log("errrrrrrrrrrrrrrr",this.state)
+                            this.setState({ mesShow: true, message:res.data.message, success:res.data.success });
+                            dispatch({ type:"ON_CLOSE",typeItem,user:"",success:true, message:res.data.message, showMessage:false });
                         } else {
-                            dispatch({ type:"SHOW_DRAWER",typeItem,text});
+                            dispatch({ type:"SHOW_DRAWER",typeItem,text });
                         }
                     });
             } else {
-                dispatch({ type:"SHOW_DRAWER",typeItem,text});
+                dispatch({ type:"SHOW_DRAWER",typeItem,text });
             }
         }
     };
 }
-
-// function mapPropsToFields(props) {
-//     return {
-//         description: Form.createFormField({
-//             value: props.item.description
-//         })
-//     }
-// }
 
 let UserListRedux = connect(mapStateToProps,mapDispatchToProps)(UserList);
 export default UserListRedux;

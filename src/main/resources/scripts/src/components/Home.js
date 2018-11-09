@@ -6,6 +6,7 @@ import Register from '../components/Register';
 import AddUser from '../components/AddUser'
 import Users from '../components/Users';
 import '../css/home.less'
+import notFound from "./NotFound";
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 class SiderDemo extends React.Component {
@@ -71,6 +72,7 @@ class SiderDemo extends React.Component {
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 650 }}>
                         <Route path={`${match.url}/users`} component={Users}/>
+                        <Route path={`${match.url}/found404`} component={notFound}/>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
                         Web ©2018 Created by chenglin
