@@ -68,7 +68,7 @@ class SiderDemo extends React.Component {
                     <Header style={{ background: '#fff', padding: 0 }}>
                         <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
                         <Avatar className='userAvatar' style={{ backgroundColor: '#87d068',float: 'right',top:'20px',right:'80px' }} size="small" icon="user" />
-                        <Icon type="logout" onClick={ this.props.logout } style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
+                        <Icon type="logout" onClick={ this.props.logout.bind(this) } style={{ fontSize: 18,float: 'right',lineHeight: '64px',padding: '0 24px',cursor: 'pointer' }} />
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 650 }}>
                         <Route path={`${match.url}/users`} component={Users}/>
@@ -89,9 +89,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        logout:function(history){
+        logout:function(){
             dispatch({ type:"LOGOUT",state:'' });
-            history.push("/login");
+            this.props.history.push("/login");
         }
     };
 }

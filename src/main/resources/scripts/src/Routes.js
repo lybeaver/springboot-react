@@ -13,10 +13,12 @@ class BasicRoute extends React.Component {
 
     componentWillMount() {
         const history = this.props.history
+        let url = "";
         axios.interceptors.request.use(function (config) {
             const token = localStorage.getItem("my_token")
+            url = config.url
             console.log("1111111111111",token)
-            if (config.url !== '/login' && token) {
+            if (!config.url.includes("/public/login") && token) {
                 console.log("2222222222222",config)
                 config.headers.Authorization = token;
             } else if (token == null || token === '') {
@@ -30,11 +32,16 @@ class BasicRoute extends React.Component {
         })
         axios.interceptors.response.use(function (response) {
             console.log("response response",response)
+            if(response && response.data.code === 400) {
+                setTimeout(()=>{
+                    history.push('/login')
+                },1000)
+            }
             return response;
         },function (error) {
             // localStorage.removeItem('my_token')
-            console.log("error error",Promise.reject(error));
-            if (error) {
+            console.log("error error",url);
+            if (error && !url.includes("/public/login")) {
                 setTimeout(() => {
                     history.push('/home/found404')
                 },1)

@@ -52,12 +52,16 @@ public class UserService {
             return user;
         } else {
             tUser upUser = userMapper.selectByPrimaryKey(user.getId());
-            if (upUser != null && upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
-                user.setUpdateById(new Long(1001));
-                user.setUpdateTime(new Date());
-                user.setCounts(upUser.getCounts()+1);
-                userMapper.updateByPrimaryKeySelective(user);
-                upUser = userMapper.selectByPrimaryKey(user.getId());
+            if (upUser != null) {
+                if (upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
+                    user.setUpdateById(new Long(1001));
+                    user.setUpdateTime(new Date());
+                    user.setCounts(upUser.getCounts()+1);
+                    userMapper.updateByPrimaryKeySelective(user);
+                    upUser = userMapper.selectByPrimaryKey(user.getId());
+                } else {
+                    return null;
+                }
             }
             return upUser;
         }

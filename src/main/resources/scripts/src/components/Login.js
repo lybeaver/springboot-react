@@ -8,13 +8,18 @@ const FormItem = Form.Item;
 const initState = {
     isLogin: false,
     token: '',
-    user:{}
+    user:{
+        username:"",password:""
+    }
 }
 class NormalLoginForm extends React.Component{
     state = {
         loginError: false,
         loading: false,
-        loadText: '登录'
+        loadText: '登录',
+        user:{
+            username:"",password:""
+        }
     }
     componentWillMount() {
 
@@ -22,12 +27,15 @@ class NormalLoginForm extends React.Component{
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            this.setState({user:{username:values.loginName,password:values.password}});
+            console.log("value values",values);
             if (!err) {
                 console.log('Received values of form: ', this.props);
                 this.setState({loading: true});
                 this.setState({loadText: "登录中..."});
                 axios.post("http://localhost:8080/public/login",values)
                 .then(res=>{
+                    console.log("res res",res);
                     if (res.data === '') {
                         this.setState({loading: false});
                         this.setState({loginError: true});
@@ -43,7 +51,7 @@ class NormalLoginForm extends React.Component{
                 });
             } else {
                 this.setState({loading: false});
-                this.setState({loginError: true});
+                // this.setState({loginError: true});
             }
         });
     }
@@ -63,6 +71,7 @@ class NormalLoginForm extends React.Component{
                         <Form onSubmit={this.handleSubmit}>
                             <FormItem>
                                 {getFieldDecorator('loginName', {
+                                    initialValue:this.state.user.username,
                                     rules: [{ required: true, message: '请输入用户名' }],
                                 })(
                                     <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入用户名" />
@@ -70,6 +79,7 @@ class NormalLoginForm extends React.Component{
                             </FormItem>
                             <FormItem>
                                 {getFieldDecorator('password', {
+                                    initialValue:this.state.user.password,
                                     rules: [{ required: true, message: '请输入密码' }],
                                 })(
                                     <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="请输入密码" />

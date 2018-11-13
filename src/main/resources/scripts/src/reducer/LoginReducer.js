@@ -11,7 +11,7 @@ export function loginInfo (state = initState,action) {
         case LOGIN:
             return {isLogin: true, token:action.state.token, user:action.state.user};
         case LOGOUT:
-            return initState;
+            return {isLogin: false, token:null, user:action.state.user};
         default:
             return initState;
     }

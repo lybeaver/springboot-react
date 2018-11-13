@@ -113,6 +113,7 @@ class UserList extends React.Component {
                         item.key = index.toString();
                         item.name = value.name;
                         item.telephone = value.telephone;
+                        //item.sex = value.sex;
                         item.sex = value.sex === "1" ? "男":"女";
                         item.loginName = value.loginName;
                         item.birthday = moment(value.birthday).format('YYYY-MM-DD');
@@ -132,7 +133,7 @@ class UserList extends React.Component {
     }
     render(){
         const prop = this.props.state.showUserInfo;
-       return (
+        return (
            <div>
                <div>
                <Modal
@@ -169,7 +170,7 @@ class UserList extends React.Component {
                        marginRight: 8,
                    }} onClick = { this.props.showDrawer.bind(this,'ADD',undefined) }>添加成员</Button>
                    </div>
-                   { prop.showMessage ? <div><Alert message={ prop.message } type={ prop.success ? "success" : "error" } showIcon /></div> : "" }
+                   {/*{ prop.showMessage ? <div><Alert message={ prop.message } type={ prop.success ? "success" : "error" } showIcon /></div> : "" }*/}
                    <AddUser/>
                </InputGroup>
                <div style={{ height:20 }}/>
@@ -191,7 +192,7 @@ function mapDispatchToProps(dispatch) {
                     .then(res=>{
                         if (res.data.code === '501') {
                             this.setState({ mesShow: true, message:res.data.message, success:res.data.success });
-                            dispatch({ type:"ON_CLOSE",typeItem,user:"",success:true, message:res.data.message, showMessage:false });
+                            dispatch({ type:"ON_CLOSE", typeItem, user:"", success:true, message:res.data.message, showMessage:false });
                         } else {
                             dispatch({ type:"SHOW_DRAWER",typeItem,text });
                         }

@@ -31,31 +31,31 @@
       <property name="enableSubPackages" value="true" />
     </javaClientGenerator>
 
-    <table schema="DB2ADMIN" tableName="t_user" domainObjectName="tUser" >
+    <table tableName="t_user" domainObjectName="tUser" >
       <property name="useActualColumnNames" value="false"/>
-      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" />
     </table>
 	
-	<table schema="DB2ADMIN" tableName="t_user_role" domainObjectName="tUserRole" >
+	<table tableName="t_user_role" domainObjectName="tUserRole" >
       <property name="useActualColumnNames" value="false"/>
     </table>
     
-    <table schema="DB2ADMIN" tableName="t_role" domainObjectName="tRole" >
+    <table tableName="t_role" domainObjectName="tRole" >
       <property name="useActualColumnNames" value="false"/>
-      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" />
     </table>
     
-    <table schema="DB2ADMIN" tableName="t_resource" domainObjectName="tResource" >
+    <table tableName="t_resource" domainObjectName="tResource" >
       <property name="useActualColumnNames" value="false"/>
-      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" />
     </table>
     
-    <table schema="DB2ADMIN" tableName="t_permission" domainObjectName="tPermission" >
+    <table tableName="t_permission" domainObjectName="tPermission" >
       <property name="useActualColumnNames" value="false"/>
-      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
+      <generatedKey column="ID" sqlStatement="MySql" identity="true" />
     </table>
     
-    <table schema="DB2ADMIN" tableName="t_role_resource_permission" domainObjectName="tRoleResourcePermission" >
+    <table tableName="t_role_resource_permission" domainObjectName="tRoleResourcePermission" >
       <property name="useActualColumnNames" value="false"/>
     </table>
   </context>

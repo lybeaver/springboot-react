@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import axios from "axios";
+import {Message} from "../common/Message";
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
@@ -25,7 +26,7 @@ class AddUserForm extends React.Component {
                             const result = res.data || {};
                             if (res.data.success) {
                                 console.log("success axios success",this.props,res.data.data,res.data.success,res.data.message);
-                                this.props.onClose("",result.data,true,result.message,true,this.props.form);
+                                this.props.onClose("",result.data,true,result.message,true,this.props.form,true);
                                 // function(typeItem, user, success, message)
                             }
                         }
@@ -102,7 +103,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="性别">
                                     {getFieldDecorator('sex', {
-                                        initialValue: (user||{}).sex,
+                                        initialValue: (user||{}).sex==='男'?'1':'0',
                                         rules: [{ required: true, message: '请选择性别' }],
                                     })(
                                         <Select placeholder="请选择性别">
@@ -127,7 +128,7 @@ class AddUserForm extends React.Component {
                             <Col span={12}>
                                 <Form.Item label="生日">
                                     {getFieldDecorator('birthday', {
-                                        initialValue:user?moment((user||{}).birthday, 'YYYY-MM-DD'):undefined,
+                                        initialValue:user ? moment((user||{}).birthday, 'YYYY-MM-DD'):undefined,
                                         rules: [{ required: true, message: '请选择日期' }],
                                     })(
                                         <DatePicker placeholder="请选择日期"/>
@@ -163,10 +164,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onClose:function(typeItem, user, success, message,showMessage, form){
+        onClose:function(typeItem, user, success, message, showMessage, form,isSave){
             console.log("close close",this.props);
-            if (success) {
+            if (isSave) {
                 form.resetFields();
+                Message(success?"SUCCESS":"ERROR",message);
             } else {
                 this.props.form.resetFields();
             }
