@@ -1,4 +1,4 @@
-package com.example.mydemo.mapper;
+package com.example.mydemo.mapper.common;
 
 import com.example.mydemo.beans.tPermission;
 import com.example.mydemo.beans.tPermissionExample;

@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import axios from "axios";
-import {Message} from "../common/Message";
+import { Message } from "../common/Message";
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
@@ -24,9 +24,9 @@ class AddUserForm extends React.Component {
                 axios.post(url,values)
                     .then(res => {
                             const result = res.data || {};
-                            if (res.data.success) {
+                            if (result.success) {
                                 console.log("success axios success",this.props,res.data.data,res.data.success,res.data.message);
-                                this.props.onClose("",result.data,true,result.message,true,this.props.form,true);
+                                this.props.onClose("", result.data, result.success, result.message, this.props.form, true, result.icon);
                                 // function(typeItem, user, success, message)
                             }
                         }
@@ -150,8 +150,8 @@ class AddUserForm extends React.Component {
                             borderRadius: '0 0 4px 4px',
                         }}
                     >
-                        <Button style={{marginRight: 8}} onClick={this.props.onClose.bind(this)}>关闭</Button>
-                        <Button  type="primary" onClick={this.handleSave.bind(this,doType,(user||{}).id)}>保存</Button>
+                        <Button style={{marginRight: 8}} onClick = { this.props.onClose.bind(this) }>关闭</Button>
+                        <Button  type="primary" onClick = { this.handleSave.bind(this,doType,(user||{}).id) }>保存</Button>
                     </div>
                 </Drawer>
             </div>
@@ -164,18 +164,17 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onClose:function(typeItem, user, success, message, showMessage, form,isSave){
-            console.log("close close",this.props);
+        onClose:function(typeItem, user, success, message, form,isSave, icon){
+            console.log("close close",this.props,icon);
             if (isSave) {
                 form.resetFields();
-                Message(success?"SUCCESS":"ERROR",message);
+                Message(icon,message);
             } else {
                 this.props.form.resetFields();
             }
-            dispatch({ type:"ON_CLOSE",typeItem,user,success, message,showMessage });
+            dispatch({ type:"ON_CLOSE", typeItem, user, success, message, icon});
         }
     };
 }
-// const AddUser = Form.create()(AddUserForm);
 const AddUser = connect(mapStateToProps,mapDispatchToProps)(Form.create()(AddUserForm));
 export default AddUser;

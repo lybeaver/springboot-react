@@ -1,4 +1,4 @@
-package com.example.mydemo.commons;
+package com.example.mydemo.commonBeans;
 
 /**
  * 状态码，对应前端处理

@@ -1,4 +1,4 @@
-package com.example.mydemo.mapper;
+package com.example.mydemo.mapper.common;
 
 import com.example.mydemo.beans.tRole;
 import com.example.mydemo.beans.tRoleExample;

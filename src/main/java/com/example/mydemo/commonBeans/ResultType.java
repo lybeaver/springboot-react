@@ -1,4 +1,4 @@
-package com.example.mydemo.commons;
+package com.example.mydemo.commonBeans;
 
 /**
  * 返回类型常量
@@ -41,5 +41,7 @@ public final class ResultType {
     public static final String OPERATION_FAULT="操作失败";
 
     public static final String PARENTNAME_NULL="省厅上报功能未开通";
+
+    public static final Integer PAGE_SIZES = 10;
 
 }

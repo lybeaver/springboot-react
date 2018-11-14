@@ -2,10 +2,13 @@ package com.example.mydemo.service;
 
 import com.example.mydemo.beans.tUser;
 import com.example.mydemo.beans.tUserExample;
-import com.example.mydemo.commons.Aes;
-import com.example.mydemo.commons.MsgContant;
-import com.example.mydemo.commons.ResultType;
-import com.example.mydemo.mapper.tUserMapper;
+import com.example.mydemo.commonBeans.Aes;
+import com.example.mydemo.commonBeans.MsgContant;
+import com.example.mydemo.commonBeans.PageBean;
+import com.example.mydemo.mapper.common.tUserMapper;
+import com.example.mydemo.mapper.user.UserMapper;
+import com.example.mydemo.searchBeans.SearchBeanUser;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,9 @@ import java.util.List;
 @Service
 public class UserService {
     @Autowired
-    private tUserMapper userMapper;
+    private tUserMapper tUserMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      *
@@ -30,10 +35,24 @@ public class UserService {
         } else {
             userExample.createCriteria().andLoginNameEqualTo(userName).andPasswordEqualTo(password).andDeleteFlgEqualTo(MsgContant.DEL_FLG.COMMON.toString());
         }
-        List<tUser> users = userMapper.selectByExample(userExample);
+        List<tUser> users = tUserMapper.selectByExample(userExample);
         return users;
     }
 
+    /**
+     * 检索数据
+     * @param searchBeanUser
+     * @return
+     */
+    public PageBean selectUsers(SearchBeanUser searchBeanUser) {
+        PageHelper.startPage(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize());
+        List<tUser> allItems = userMapper.seleteUsers(searchBeanUser);
+        //总记录数
+        int counts = allItems.size();
+        PageBean<tUser> pageInfo = new PageBean<>(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize(), counts);
+        pageInfo.setItems(allItems);
+        return pageInfo;
+    }
     /**
      *
      * @param user
@@ -48,17 +67,17 @@ public class UserService {
             user.setUpdateTime(new Date());
             user.setDeleteFlg(MsgContant.DEL_FLG.COMMON.toString());
             user.setPassword(Aes.aesEncrypt("123456"));
-            userMapper.insertSelective(user);
+            tUserMapper.insertSelective(user);
             return user;
         } else {
-            tUser upUser = userMapper.selectByPrimaryKey(user.getId());
+            tUser upUser = tUserMapper.selectByPrimaryKey(user.getId());
             if (upUser != null) {
                 if (upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
                     user.setUpdateById(new Long(1001));
                     user.setUpdateTime(new Date());
                     user.setCounts(upUser.getCounts()+1);
-                    userMapper.updateByPrimaryKeySelective(user);
-                    upUser = userMapper.selectByPrimaryKey(user.getId());
+                    tUserMapper.updateByPrimaryKeySelective(user);
+                    upUser = tUserMapper.selectByPrimaryKey(user.getId());
                 } else {
                     return null;
                 }
@@ -73,7 +92,7 @@ public class UserService {
      * @return
      */
      public tUser getUser(Long id) {
-         tUser user = userMapper.selectByPrimaryKey(id);
+         tUser user = tUserMapper.selectByPrimaryKey(id);
          if (user != null && user.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
              return user;
          } else {

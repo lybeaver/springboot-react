@@ -1,5 +1,8 @@
-package com.example.mydemo.commons;
+package com.example.mydemo.commonBeans;
 
+/**
+ * 公用枚举信息
+ */
 public class MsgContant {
 
     public enum DEL_FLG {
@@ -20,4 +23,7 @@ public class MsgContant {
         }
     }
 
+    public enum ICON {
+        SUCCESS,ERROR,WARNING
+    }
 }

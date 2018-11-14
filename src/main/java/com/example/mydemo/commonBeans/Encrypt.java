@@ -1,4 +1,4 @@
-package com.example.mydemo.commons;
+package com.example.mydemo.commonBeans;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.example.mydemo.commons;
+package com.example.mydemo.commonBeans;
 
 /**
  * Description:通用返回包装对象
@@ -7,11 +7,11 @@ public class Result implements java.io.Serializable {
 
     private static final long serialVersionUID = -7074012067378557866L;
 
-    /** 返回结果集 */
+    /** 返回单一结果(被更新或者被添加数据) */
     private Object data;
 
     /**分页信息 */
-    private Object pageInfo;
+    private PageBean pageInfo;
 
     /** 成功失败 */
     private boolean success;
@@ -54,7 +54,7 @@ public class Result implements java.io.Serializable {
         return result;
     }
 
-    public static Result result(Object data,Object pageInfo, boolean success, Integer code, String message) {
+    public static Result result(Object data,PageBean pageInfo, boolean success, Integer code, String message) {
         Result result = new Result();
         result.pageInfo = pageInfo;
         result.data = data;
@@ -64,6 +64,16 @@ public class Result implements java.io.Serializable {
         return result;
     }
 
+    public static Result result(Object data,PageBean pageInfo, boolean success, Integer code, String message, String icon) {
+        Result result = new Result();
+        result.pageInfo = pageInfo;
+        result.data = data;
+        result.success = success;
+        result.message = message;
+        result.code = code;
+        result.icon = icon;
+        return result;
+    }
 
     //返回成功结果
     public static  Result resultSuccess(Object data, String message) {
@@ -126,9 +136,8 @@ public class Result implements java.io.Serializable {
         return pageInfo;
     }
 
-    public void setPageInfo(Object pageInfo) {
+    public void setPageInfo(PageBean pageInfo) {
         this.pageInfo = pageInfo;
     }
-
 
 }

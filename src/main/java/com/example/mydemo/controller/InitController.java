@@ -2,7 +2,8 @@ package com.example.mydemo.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.mydemo.beans.tUser;
-import com.example.mydemo.commons.*;
+import com.example.mydemo.commonBeans.*;
+import com.example.mydemo.searchBeans.SearchBeanUser;
 import com.example.mydemo.service.UserService;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class InitController {
     public Result getUser(@PathVariable Long id) {
         tUser user = userService.getUser(id);
         if (user == null) {
-            return Result.result(null,null,false, StatusCode.FIND_ERROR, ResultType.FIND_FAULT);
+            return Result.result(null,null,false, StatusCode.FIND_ERROR, ResultType.FIND_FAULT, MsgContant.ICON.ERROR.toString());
         }
         return Result.result(user,null,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS);
     }
@@ -62,23 +63,37 @@ public class InitController {
         return token;
     }
 
+    @RequestMapping(value = "/searchUsers",method = RequestMethod.POST)
+    public Result searchUsers(@RequestBody SearchBeanUser user) {
+        user.setCurrentPage(user.getCurrentPage());
+        user.setPageSize(ResultType.PAGE_SIZES);
+        PageBean<tUser> pageInfo = userService.selectUsers(user);
+        return Result.result(null,pageInfo,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS, MsgContant.ICON.SUCCESS.toString());
+    }
+
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
-    public Result addUser(@RequestBody tUser user) {
+    public Result addUser(@RequestBody SearchBeanUser user) {
         tUser newUser = userService.saveUser(user,"ADD");
+        user.setCurrentPage(1);
+        user.setPageSize(ResultType.PAGE_SIZES);
+        PageBean<tUser> pageInfo = userService.selectUsers(user);
         if (newUser == null) {
-            return Result.result(null,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+            return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {
-            return Result.result(newUser,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+            return Result.result(newUser,pageInfo,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
         }
     }
 
     @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
-    public Result updateUser(@RequestBody tUser user) {
+    public Result updateUser(@RequestBody SearchBeanUser user) {
         tUser upUser = userService.saveUser(user,"EDIT");
+        user.setCurrentPage(1);
+        user.setPageSize(ResultType.PAGE_SIZES);
+        PageBean<tUser> pageInfo = userService.selectUsers(user);
         if (upUser == null) {
-            return Result.result(null,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+            return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {
-            return Result.result(upUser,null,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS);
+            return Result.result(upUser,pageInfo,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
         }
     }
 

@@ -54,9 +54,6 @@ function deleteConfirm()  {
 class UserList extends React.Component {
     constructor(props) {
         super(props)
-        this.showModal = this.showModal.bind(this)
-        this.handleOk = this.handleOk.bind(this)
-        this.handleCancel = this.handleCancel.bind(this)
         this.state = {
             data: [],
             visible: false,
@@ -76,17 +73,28 @@ class UserList extends React.Component {
         });
     };
 
-    handleOk = (e) => {
+    handleOk = () => {
         this.setState({
             visible: false,
         });
     };
 
-    handleCancel = (e) => {
+    handleCancel = () => {
         this.setState({
             visible: false,
         });
     };
+
+    handleSearch = (e) => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            console.log('Received values of form: ', values);
+        });
+    }
+
+    handleReset = () => {
+        this.props.form.resetFields();
+    }
 
     componentDidMount() {
         columns[5].render = (text, record) => (
@@ -105,15 +113,14 @@ class UserList extends React.Component {
                             name: '',
                             telephone: 0,
                             sex: '',
-                            loginName:'',
-                            birthday:'',
-                            id:''
+                            loginName: '',
+                            birthday: '',
+                            id: ''
                         }
                         item.id = value.id;
                         item.key = index.toString();
                         item.name = value.name;
                         item.telephone = value.telephone;
-                        //item.sex = value.sex;
                         item.sex = value.sex === "1" ? "男":"女";
                         item.loginName = value.loginName;
                         item.birthday = moment(value.birthday).format('YYYY-MM-DD');
@@ -133,6 +140,7 @@ class UserList extends React.Component {
     }
     render(){
         const prop = this.props.state.showUserInfo;
+        const { getFieldDecorator } = this.props.form;
         return (
            <div>
                <div>
@@ -149,30 +157,41 @@ class UserList extends React.Component {
                    <p>Some contents...</p>
                </Modal>
            </div>
-               <InputGroup compact>
-                   <Col span={151}>
-                   <Input style={{ width: 150}} placeholder="昵称" />
-                   </Col>
-                   <Col span={151}>
-                   <Input style={{ width: 150}} placeholder="电话" />
-                   </Col>
-                   <Col span={81}>
-                   <Select defaultValue="1" style={{ width: 80 }}>
-                       <Option value="1">男</Option>
-                       <Option value="0">女</Option>
-                   </Select>
-                   </Col>
-                   <div>
-                   <Button type="primary" style={{
-                       marginRight: 8,
-                   }} icon="search">搜索</Button>
+               <Form layout={"inline"} onSubmit={this.handleSearch.bind(this)}>
+                    <Form.Item>
+                        {getFieldDecorator('name', {
+                            rules: [{ required: false }],
+                        })(
+                            <Input  placeholder="姓名" />
+                        )}
+                    </Form.Item>
+                   <Form.Item>
+                       {getFieldDecorator('telephone', {
+                           rules: [{ required: false }],
+                       })(
+                           <Input  placeholder="电话" />
+                       )}
+                   </Form.Item>
+                   <Form.Item>
+                       {getFieldDecorator('sex', {
+                           rules: [{ required: true, message: '请选择性别' }],
+                       })(
+                           <Select placeholder="请选择性别">
+                               <Option value="0">女</Option>
+                               <Option value="1">男</Option>
+                           </Select>
+                       )}
+                   </Form.Item>
+                   <Button type="primary" htmlType="submit">查询</Button>
+                   <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+                       清除
+                   </Button>
+               </Form>
+               <div>
                    <Button type="primary" style={{
                        marginRight: 8,
                    }} onClick = { this.props.showDrawer.bind(this,'ADD',undefined) }>添加成员</Button>
-                   </div>
-                   {/*{ prop.showMessage ? <div><Alert message={ prop.message } type={ prop.success ? "success" : "error" } showIcon /></div> : "" }*/}
-                   <AddUser/>
-               </InputGroup>
+               </div>
                <div style={{ height:20 }}/>
            <Table columns={ columns } dataSource={ this.state.data }/>
        </div>);
@@ -190,11 +209,12 @@ function mapDispatchToProps(dispatch) {
             if (typeItem === 'EDIT') {
                 axios.get("http://localhost:8080/public/getUser/"+text.id)
                     .then(res=>{
-                        if (res.data.code === '501') {
-                            this.setState({ mesShow: true, message:res.data.message, success:res.data.success });
-                            dispatch({ type:"ON_CLOSE", typeItem, user:"", success:true, message:res.data.message, showMessage:false });
+                        const result = res.data||{};
+                        if (result.code === '501') {
+                            this.setState({ mesShow: true, message:result.message, success:result.success });
+                            dispatch({type:"ON_CLOSE", typeItem, user:"", success:true, message:result.message, icon:result.icon});
                         } else {
-                            dispatch({ type:"SHOW_DRAWER",typeItem,text });
+                            dispatch({type:"SHOW_DRAWER", typeItem, text});
                         }
                     });
             } else {
