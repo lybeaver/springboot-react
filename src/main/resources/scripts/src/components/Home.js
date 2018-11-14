@@ -1,12 +1,11 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon, Avatar } from 'antd';
-import { NavLink, Link, Route, Redirect, Switch, BrowserRouter,withRouter } from 'react-router-dom';
+import {Avatar, Icon, Layout, Menu} from 'antd';
+import {Link, NavLink, Route, withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
-import Register from '../components/Register';
-import AddUser from '../components/AddUser'
 import Users from '../components/Users';
 import '../css/home.less'
 import notFound from "./NotFound";
+
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 class SiderDemo extends React.Component {
