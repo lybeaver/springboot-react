@@ -6,5 +6,5 @@ import com.example.mydemo.searchBeans.SearchBeanUser;
 import java.util.List;
 
 public interface UserMapper {
-    List<tUser> seleteUsers(SearchBeanUser searchBeanUser);
+    List<tUser> selectUsers(SearchBeanUser searchBeanUser);
 }

@@ -46,7 +46,7 @@ public class UserService {
      */
     public PageBean selectUsers(SearchBeanUser searchBeanUser) {
         PageHelper.startPage(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize());
-        List<tUser> allItems = userMapper.seleteUsers(searchBeanUser);
+        List<tUser> allItems = userMapper.selectUsers(searchBeanUser);
         //总记录数
         int counts = allItems.size();
         PageBean<tUser> pageInfo = new PageBean<>(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize(), counts);
