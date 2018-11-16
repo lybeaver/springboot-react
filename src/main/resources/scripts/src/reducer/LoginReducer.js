@@ -6,12 +6,12 @@ const initState = {
     token: '',
     user:{}
 }
-export function loginInfo (state = initState,action) {
+export function loginInfo (state,action) {
     switch(action.type){
         case LOGIN:
-            return {isLogin: true, token:action.state.token, user:action.state.user};
+            return {...state,isLogin: true, token:action.state.token, user:action.state.user};
         case LOGOUT:
-            return {isLogin: false, token:null, user:action.state.user};
+            return {...state,isLogin: false, token:null, user:action.state.user};
         default:
             return initState;
     }

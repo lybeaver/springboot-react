@@ -1,11 +1,13 @@
 import React from 'react'
 import {Button, Form, Input, Select} from 'antd'
+import connect from "react-redux/es/connect/connect";
 const Option = Select.Option;
 class SearchUserForm extends React.Component {
     handleSearch = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             console.log('Received values of form: ', values);
+            this.props.searchData(values);
         });
     }
 
@@ -33,9 +35,9 @@ class SearchUserForm extends React.Component {
                 </Form.Item>
                 <Form.Item>
                     {getFieldDecorator('sex', {
-                        rules: [{ required: true, message: '请选择性别' }],
+                        rules: [{ required: false }],
                     })(
-                        <Select placeholder="请选择性别" style={{ width: 150 }}>
+                        <Select placeholder="性别" style={{ width: 150 }}>
                             <Option value="0">女</Option>
                             <Option value="1">男</Option>
                         </Select>
@@ -47,5 +49,16 @@ class SearchUserForm extends React.Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return { state: state };
+}
 
-export default Form.create()(SearchUserForm)
+function mapDispatchToProps(dispatch) {
+    return {
+        searchData:function (searchValues) {
+            dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Form.create()(SearchUserForm));

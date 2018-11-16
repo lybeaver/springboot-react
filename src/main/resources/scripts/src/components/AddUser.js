@@ -1,4 +1,4 @@
-import {Drawer, Form, Button, Col, Row, Input, Select, DatePicker,Avatar, Icon} from 'antd';
+import { Drawer, Form, Button, Col, Row, Input, Select, DatePicker, Avatar, Icon } from 'antd';
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -19,7 +19,7 @@ class AddUserForm extends React.Component {
             console.log('Received values of form: ',values,doType,id);
             console.log("value value",{...values,di:id})
             if (!err) {
-                const url = "http://localhost:8080/public/"+(doType==='ADD'?"addUser":"updateUser");
+                const url = "http://localhost:8080/public/" + (doType===`ADD` ? `addUser` : `updateUser`);
                 values.id = id;
                 axios.post(url,values)
                     .then(res => {
@@ -35,11 +35,15 @@ class AddUserForm extends React.Component {
         });
     }
 
+    handleReset = () => {
+        this.props.form.resetFields();
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const user = this.props.state.showUserInfo.user;
         const doType = this.props.state.showUserInfo.typeItem;
-        const typeName = doType === 'ADD' ? '添加成员':'编辑成员';
+        const typeName = doType === `ADD` ? `添加成员` : `编辑成员`;
         console.log("user user user",user);
         console.log("drawerVisible drawerVisible",this.props)
         return (
@@ -48,9 +52,9 @@ class AddUserForm extends React.Component {
                     title={typeName}
                     width={720}
                     placement="right"
-                    onClose={this.props.closeDrawer.bind(this)}
+                    onClose={this.props.saveClose.bind(this)}
                     maskClosable={false}
-                    visible={this.props.state.editDrawer.drawerVisible}
+                    visible={this.props.state.showUserInfo.drawerVisible}
                     style={{
                         height: 'calc(100% - 55px)',
                         overflow: 'auto',
@@ -136,8 +140,8 @@ class AddUserForm extends React.Component {
                             borderRadius: '0 0 4px 4px',
                         }}
                     >
-                        <Button style={{marginRight: 8}} onClick = { this.props.closeDrawer.bind(this) }>关闭</Button>
-                        <Button  type="primary" onClick = { this.handleSave.bind(this,doType,(user||{}).id) }>保存</Button>
+                        <Button style={{marginRight: 8}} onClick = { this.props.saveClose.bind(this) }>关闭</Button>
+                        <Button  type="primary" onClick = { this.handleSave.bind(this, doType, (user || {}).id) }>保存</Button>
                     </div>
                 </Drawer>
             </div>
@@ -150,18 +154,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        saveClose:function(typeItem, user, success, message, form,isSave, icon){
+        saveClose:function(typeItem, user, success, message, form, isSave, icon) {
             console.log("close close",this.props,icon);
+            this.handleReset();
             if (isSave) {
-                form.resetFields();
                 Message(icon,message);
-            } else {
-                this.props.form.resetFields();
             }
-            dispatch({ type:"SAVE_CLOSE", typeItem, user, success, message, icon});
-        },
-        closeDrawer:function() {
-            dispatch( { type: `CLOSE_DRAWER`} );
+            dispatch({type:"SAVE_CLOSE", drawerVisible: false, typeItem, user, success, message, icon});
         }
     };
 }

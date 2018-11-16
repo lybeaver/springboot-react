@@ -54,12 +54,6 @@ class UserList extends React.Component {
         };
     }
 
-    showDrawer = () => {
-        this.setState({
-            drawerVisible: true,
-        });
-    };
-
     componentDidMount() {
         columns[5].render = (text, record) => (
             <span>
@@ -70,6 +64,7 @@ class UserList extends React.Component {
         );
         const searchValues = {current:1}
         this.props.searchData(searchValues);
+        console.log("state state",this.props)
     }
     componentDidUpdate () {
 
@@ -84,7 +79,7 @@ class UserList extends React.Component {
            <div>
                <div>
                    <SearchUserForm/>
-                   <Button type="primary" style = {{float: 'right',display: 'inline',top: '-35px'}} onClick = { this.props.showDrawer.bind(this) }>添加成员</Button>
+                   <Button type="primary" style = {{float: 'right',display: 'inline',top: '-35px'}} onClick = { this.props.saveShow.bind(this) }>添加成员</Button>
                </div>
                <div style={{ height:20 }}/>
                <AddUser/>
@@ -106,46 +101,44 @@ function mapDispatchToProps(dispatch) {
                     .then(res=>{
                         const result = res.data||{};
                         if (result.code === '501') {
-                            dispatch({type:"SAVE_CLOSE", typeItem, user:"", success:true, message:result.message, icon:result.icon});
+                            dispatch({type:`SAVE_CLOSE`,drawerVisible: false, typeItem, user:"", success:true, message:result.message, icon:result.icon});
                         } else {
-                            dispatch({type:"SAVE_SHOW", typeItem, text});
+                            dispatch({type:`SAVE_SHOW`,drawerVisible: true, typeItem, text});
                         }
                     });
             } else {
-                dispatch({ type:"SAVE_SHOW",typeItem,text });
+                dispatch({ type:`SAVE_SHOW`,drawerVisible: true ,typeItem ,text });
             }
         },
         searchData:function (searchValues) {
-            axios.post("http://localhost:8080/public/searchUsers",searchValues)
-                .then(res=>{
-                    const pageInfo = res.data.pageInfo||{};
-                    console.log("pageInfo pageInfo",pageInfo)
-                    let result = [];
-                    (pageInfo.items || []).map((value,index) => {
-                            const item = {
-                                key: '',
-                                name: '',
-                                telephone: 0,
-                                sex: '',
-                                loginName: '',
-                                birthday: '',
-                                id: ''
-                            }
-                            item.id = value.id;
-                            item.key = index.toString();
-                            item.name = value.name;
-                            item.telephone = value.telephone;
-                            item.sex = value.sex === "1" ? "男":"女";
-                            item.loginName = value.loginName;
-                            item.birthday = moment(value.birthday).format('YYYY-MM-DD');
-                            result.push(item);
-                        }
-                    );
-                    dispatch({type:"SEARCH_DATA", dataList:result});
-                })
-        },
-        showDrawer:function () {
-            dispatch( { type: `SHOW_DRAWER`} );
+            dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
+            // axios.post("http://localhost:8080/public/searchUsers",searchValues)
+            //     .then(res=>{
+            //         const pageInfo = res.data.pageInfo||{};
+            //         console.log("pageInfo pageInfo",pageInfo)
+            //         let result = [];
+            //         (pageInfo.items || []).map((value,index) => {
+            //                 const item = {
+            //                     key: '',
+            //                     name: '',
+            //                     telephone: 0,
+            //                     sex: '',
+            //                     loginName: '',
+            //                     birthday: '',
+            //                     id: ''
+            //                 }
+            //                 item.id = value.id;
+            //                 item.key = index.toString();
+            //                 item.name = value.name;
+            //                 item.telephone = value.telephone;
+            //                 item.sex = value.sex === "1" ? "男":"女";
+            //                 item.loginName = value.loginName;
+            //                 item.birthday = moment(value.birthday).format('YYYY-MM-DD');
+            //                 result.push(item);
+            //             }
+            //         );
+            //         dispatch({type: `SEARCH_DATA`, dataList:result});
+            //     })
         }
     };
 }
