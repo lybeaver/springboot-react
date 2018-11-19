@@ -65,7 +65,7 @@ public class InitController {
 
     @RequestMapping(value = "/searchUsers",method = RequestMethod.POST)
     public Result searchUsers(@RequestBody SearchBeanUser user) {
-        user.setCurrentPage(user.getCurrentPage());
+        user.setPageSize(ResultType.PAGE_INIT);
         user.setPageSize(ResultType.PAGE_SIZES);
         PageBean<tUser> pageInfo = userService.selectUsers(user);
         return Result.result(null,pageInfo,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS, MsgContant.ICON.SUCCESS.toString());
@@ -74,9 +74,9 @@ public class InitController {
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
     public Result addUser(@RequestBody SearchBeanUser user) {
         tUser newUser = userService.saveUser(user,"ADD");
-        user.setCurrentPage(1);
+        user.setPageSize(ResultType.PAGE_INIT);
         user.setPageSize(ResultType.PAGE_SIZES);
-        PageBean<tUser> pageInfo = userService.selectUsers(user);
+        PageBean<tUser> pageInfo = userService.selectUsers(new SearchBeanUser());
         if (newUser == null) {
             return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {
@@ -87,9 +87,8 @@ public class InitController {
     @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
     public Result updateUser(@RequestBody SearchBeanUser user) {
         tUser upUser = userService.saveUser(user,"EDIT");
-        user.setCurrentPage(1);
         user.setPageSize(ResultType.PAGE_SIZES);
-        PageBean<tUser> pageInfo = userService.selectUsers(user);
+        PageBean<tUser> pageInfo = userService.selectUsers(new SearchBeanUser());
         if (upUser == null) {
             return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {

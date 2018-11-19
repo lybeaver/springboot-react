@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button, Form, Input, Select} from 'antd'
 import connect from "react-redux/es/connect/connect";
+import { searchData } from "../reducer/UsersActionReducer"
 const Option = Select.Option;
 class SearchUserForm extends React.Component {
     handleSearch = (e) => {
@@ -56,7 +57,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         searchData:function (searchValues) {
-            dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
+            searchData(dispatch, searchValues);
+            // dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
         }
     }
 }

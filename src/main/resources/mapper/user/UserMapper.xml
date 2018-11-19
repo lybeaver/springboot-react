@@ -28,13 +28,13 @@
     from t_user AS user
     where
           user.delete_flg = "0"
-    <if test="name != null and name != ``">
-      AND user.name = #{name,jdbcType=VARCHAR}
+    <if test="name != null and name != ''">
+      AND user.name LIKE CONCAT(CONCAT('%',#{name}),'%')
     </if>
-    <if test="sex != null and sex != ``">
+    <if test="sex != null">
       AND user.sex = #{sex,jdbcType=VARCHAR}
     </if>
-    <if test="telephone != null and telephone != ``">
+    <if test="telephone != null and telephone != ''">
       AND user.telephone = #{telephone,jdbcType=VARCHAR}
     </if>
   </select>

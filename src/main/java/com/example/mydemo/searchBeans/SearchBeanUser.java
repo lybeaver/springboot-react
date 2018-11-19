@@ -13,7 +13,7 @@ public class SearchBeanUser extends tUser {
 
     private Integer currentPage = 1;
 
-    private Integer pageSize = 10;
+    private Integer pageSize = 3;
 
     public Integer getCurrentPage() {
         return currentPage;

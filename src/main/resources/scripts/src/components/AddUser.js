@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import axios from "axios";
 import { Message } from "../common/Message";
+import { searchData } from "../reducer/UsersActionReducer"
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
@@ -11,6 +12,7 @@ class AddUserForm extends React.Component {
     constructor(props) {
         super(props);
         console.log("props props",props);
+        this.handleReset = this.handleReset.bind(this);
     }
 
     handleSave = (doType,id) => {
@@ -24,10 +26,7 @@ class AddUserForm extends React.Component {
                 axios.post(url,values)
                     .then(res => {
                             const result = res.data || {};
-                            if (result.success) {
-                                console.log("success axios success", this.props, res.data.data, res.data.success, res.data.message);
-                                this.props.saveClose("", result.data, result.success, result.message, this.props.form, true, result.icon);
-                            }
+                            this.props.saveClose("", result.data, result.success, result.message, this.props.form, true, result.icon);
                         }
                     )
                 console.log('Received values of form: ',values);
@@ -156,11 +155,16 @@ function mapDispatchToProps(dispatch) {
     return {
         saveClose:function(typeItem, user, success, message, form, isSave, icon) {
             console.log("close close",this.props,icon);
-            this.handleReset();
             if (isSave) {
+                form.resetFields();
                 Message(icon,message);
+            } else {
+                this.props.form.resetFields();
             }
             dispatch({type:"SAVE_CLOSE", drawerVisible: false, typeItem, user, success, message, icon});
+            if (isSave) {
+                searchData(dispatch,{currentPage:`1`});
+            }
         }
     };
 }

@@ -42,6 +42,7 @@ public final class ResultType {
 
     public static final String PARENTNAME_NULL="省厅上报功能未开通";
 
-    public static final Integer PAGE_SIZES = 10;
+    public static final Integer PAGE_SIZES = 3;
+    public static final Integer PAGE_INIT = 1;
 
 }

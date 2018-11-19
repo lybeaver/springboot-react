@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import AddUser from '../components/AddUser'
 import SearchUserForm from "../common/SearchUserForm";
-
+import { searchData } from "../reducer/UsersActionReducer"
 const confirm = Modal.confirm;
 const columns = [{
         title: '名字',
@@ -79,7 +79,7 @@ class UserList extends React.Component {
            <div>
                <div>
                    <SearchUserForm/>
-                   <Button type="primary" style = {{float: 'right',display: 'inline',top: '-35px'}} onClick = { this.props.saveShow.bind(this) }>添加成员</Button>
+                   <Button type="primary" style = {{float: 'right',display: 'inline',top: '-35px'}} onClick = { this.props.saveShow.bind(this,`ADD`,undefined) }>添加成员</Button>
                </div>
                <div style={{ height:20 }}/>
                <AddUser/>
@@ -111,7 +111,8 @@ function mapDispatchToProps(dispatch) {
             }
         },
         searchData:function (searchValues) {
-            dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
+            searchData(dispatch,{searchValues: searchValues})
+            // dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
             // axios.post("http://localhost:8080/public/searchUsers",searchValues)
             //     .then(res=>{
             //         const pageInfo = res.data.pageInfo||{};
