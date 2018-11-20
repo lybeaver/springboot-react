@@ -9,6 +9,7 @@ import com.example.mydemo.mapper.common.tUserMapper;
 import com.example.mydemo.mapper.user.UserMapper;
 import com.example.mydemo.searchBeans.SearchBeanUser;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +46,12 @@ public class UserService {
      * @return
      */
     public PageBean selectUsers(SearchBeanUser searchBeanUser) {
+        searchBeanUser.setDeleteFlg(MsgContant.DEL_FLG.COMMON.toString());
         PageHelper.startPage(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize());
         List<tUser> allItems = userMapper.selectUsers(searchBeanUser);
+        PageInfo<tUser> info = new PageInfo(allItems);
         //总记录数
-        int counts = allItems.size();
+        int counts =  Math.toIntExact(info.getTotal());
         PageBean<tUser> pageInfo = new PageBean<>(searchBeanUser.getCurrentPage(), searchBeanUser.getPageSize(), counts);
         pageInfo.setItems(allItems);
         return pageInfo;
@@ -73,6 +76,9 @@ public class UserService {
             tUser upUser = tUserMapper.selectByPrimaryKey(user.getId());
             if (upUser != null) {
                 if (upUser.getDeleteFlg().equals(MsgContant.DEL_FLG.COMMON.toString())) {
+                    if (doType == "DELETE") {
+                        upUser.setDeleteFlg(MsgContant.DEL_FLG.DELETE.toString());
+                    }
                     user.setUpdateById(new Long(1001));
                     user.setUpdateTime(new Date());
                     user.setCounts(upUser.getCounts()+1);

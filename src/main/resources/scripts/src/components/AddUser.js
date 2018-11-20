@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import axios from "axios";
 import { Message } from "../common/Message";
-import { searchData } from "../reducer/UsersActionReducer"
+import { searchData,doUserItems } from "../reducer/UsersActionReducer"
 const { Option } = Select;
 
 class AddUserForm extends React.Component {
@@ -26,7 +26,8 @@ class AddUserForm extends React.Component {
                 axios.post(url,values)
                     .then(res => {
                             const result = res.data || {};
-                            this.props.saveClose("", result.data, result.success, result.message, this.props.form, true, result.icon);
+                            console.log("handlesave handlesave",result)
+                            this.props.saveClose("", result.data, result.pageInfo, result.success, result.message, this.props.form, true, result.icon);
                         }
                     )
                 console.log('Received values of form: ',values);
@@ -153,7 +154,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        saveClose:function(typeItem, user, success, message, form, isSave, icon) {
+        saveClose:function(typeItem, newUser, pageInfo, success, message, form, isSave, icon) {
             console.log("close close",this.props,icon);
             if (isSave) {
                 form.resetFields();
@@ -161,9 +162,10 @@ function mapDispatchToProps(dispatch) {
             } else {
                 this.props.form.resetFields();
             }
-            dispatch({type:"SAVE_CLOSE", drawerVisible: false, typeItem, user, success, message, icon});
+            dispatch({type:"SAVE_CLOSE", drawerVisible: false, typeItem, newUser, success, message, icon});
             if (isSave) {
-                searchData(dispatch,{currentPage:`1`});
+                let result = doUserItems(pageInfo.items);
+                dispatch({type:`SEARCH_DATA`, dataList: result,currentPage: pageInfo.currentPage, pageSize:pageInfo.pageSize, total:pageInfo.totalNum});
             }
         }
     };

@@ -58,7 +58,6 @@ function mapDispatchToProps(dispatch) {
     return {
         searchData:function (searchValues) {
             searchData(dispatch, searchValues);
-            // dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
         }
     }
 }

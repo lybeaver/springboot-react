@@ -8,6 +8,7 @@ import com.example.mydemo.service.UserService;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public class InitController {
     @Autowired
     private UserService userService;
+    SearchBeanUser formUser = new SearchBeanUser();
     Logger log = LoggerFactory.getLogger(getClass());
     @RequestMapping(value="/getUserList",headers = "Accept=application/json",method=RequestMethod.GET)
     public Result init(HttpServletRequest request) {
@@ -65,8 +67,10 @@ public class InitController {
 
     @RequestMapping(value = "/searchUsers",method = RequestMethod.POST)
     public Result searchUsers(@RequestBody SearchBeanUser user) {
-        user.setPageSize(ResultType.PAGE_INIT);
+        System.out.println("qnmlgbd :"+user.getCurrentPage());
+        user.setCurrentPage(user.getCurrentPage() != null ? user.getCurrentPage() : ResultType.PAGE_INIT);
         user.setPageSize(ResultType.PAGE_SIZES);
+        BeanUtils.copyProperties(user, formUser);
         PageBean<tUser> pageInfo = userService.selectUsers(user);
         return Result.result(null,pageInfo,true, StatusCode.FIND_SUCCESS, ResultType.FIND_SUCCESS, MsgContant.ICON.SUCCESS.toString());
     }
@@ -74,26 +78,35 @@ public class InitController {
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
     public Result addUser(@RequestBody SearchBeanUser user) {
         tUser newUser = userService.saveUser(user,"ADD");
-        user.setPageSize(ResultType.PAGE_INIT);
-        user.setPageSize(ResultType.PAGE_SIZES);
-        PageBean<tUser> pageInfo = userService.selectUsers(new SearchBeanUser());
+        Result result = searchUsers(formUser);
         if (newUser == null) {
-            return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
+            return Result.result(null,result.getPageInfo(),false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {
-            return Result.result(newUser,pageInfo,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
+            return Result.result(newUser,result.getPageInfo(),true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
         }
     }
 
     @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
     public Result updateUser(@RequestBody SearchBeanUser user) {
         tUser upUser = userService.saveUser(user,"EDIT");
-        user.setPageSize(ResultType.PAGE_SIZES);
-        PageBean<tUser> pageInfo = userService.selectUsers(new SearchBeanUser());
+        Result result = searchUsers(formUser);
         if (upUser == null) {
-            return Result.result(null,pageInfo,false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
+            return Result.result(null,result.getPageInfo(),false, StatusCode.SAVE_ERROR, ResultType.SAVE_FAULT, MsgContant.ICON.ERROR.toString());
         } else {
-            return Result.result(upUser,pageInfo,true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
+            return Result.result(upUser,result.getPageInfo(),true, StatusCode.SAVE_SUCCESS, ResultType.SAVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
         }
+    }
+
+    @RequestMapping(value = "/deleteUser/{id}",method = RequestMethod.GET)
+    public Result deleteUser(@PathVariable Long id) {
+        tUser user = new tUser();
+        user.setId(id);
+        tUser upUser = userService.saveUser(user,"DELETE");
+        Result result = searchUsers(formUser);
+        if (upUser == null) {
+            return Result.result(null,result.getPageInfo(),false, StatusCode.REMOVE_ERROR, ResultType.REMOVE_FAULT, MsgContant.ICON.ERROR.toString());
+        }
+        return Result.result(upUser,result.getPageInfo(),true, StatusCode.REMOVE_SUCCESS, ResultType.REMOVE_SUCCESS, MsgContant.ICON.SUCCESS.toString());
     }
 
 }

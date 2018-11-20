@@ -132,7 +132,7 @@ public class Result implements java.io.Serializable {
         this.icon = icon;
     }
 
-    public Object getPageInfo() {
+    public PageBean getPageInfo() {
         return pageInfo;
     }
 

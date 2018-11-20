@@ -1,11 +1,11 @@
 import React from 'react'
 import axios from 'axios'
-import {Button, Divider, Modal, Table, Pagination } from 'antd';
+import {Button, Divider, Modal, Table} from 'antd';
 import {connect} from 'react-redux';
-import moment from 'moment';
 import AddUser from '../components/AddUser'
 import SearchUserForm from "../common/SearchUserForm";
-import { searchData } from "../reducer/UsersActionReducer"
+import {searchData} from "../reducer/UsersActionReducer"
+
 const confirm = Modal.confirm;
 const columns = [{
         title: '名字',
@@ -34,7 +34,7 @@ const columns = [{
 function deleteConfirm()  {
     confirm({
         title: '确定要删除么?',
-        content: '1秒后更新',
+        content: ``,
         onOk() {
         return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
@@ -62,7 +62,7 @@ class UserList extends React.Component {
                 <Button  onClick={ deleteConfirm }>删除</Button>
             </span>
         );
-        const searchValues = {current:1}
+        const searchValues = {}
         this.props.searchData(searchValues);
         console.log("state state",this.props)
     }
@@ -74,6 +74,10 @@ class UserList extends React.Component {
             return;
         }
     }
+    onChange = (page) => {
+        console.log(page);
+        this.props.searchData({currentPage : page.current});
+    }
     render(){
         return (
            <div>
@@ -83,7 +87,9 @@ class UserList extends React.Component {
                </div>
                <div style={{ height:20 }}/>
                <AddUser/>
-           <Table pagination={{defaultCurrent:1, total:7, pageSize:3}} columns={ columns } dataSource={ this.props.state.showUserInfo.dataList }/>
+           <Table pagination={{current:this.props.state.showUserInfo.currentPage, total:this.props.state.showUserInfo.total, pageSize:this.props.state.showUserInfo.pageSize}}
+                  onChange={this.onChange}
+                  columns={ columns } dataSource={ this.props.state.showUserInfo.dataList }/>
        </div>);
     }
 }
@@ -111,35 +117,7 @@ function mapDispatchToProps(dispatch) {
             }
         },
         searchData:function (searchValues) {
-            searchData(dispatch,{searchValues: searchValues})
-            // dispatch({type: `SEARCH_DATA`, searchValues: searchValues});
-            // axios.post("http://localhost:8080/public/searchUsers",searchValues)
-            //     .then(res=>{
-            //         const pageInfo = res.data.pageInfo||{};
-            //         console.log("pageInfo pageInfo",pageInfo)
-            //         let result = [];
-            //         (pageInfo.items || []).map((value,index) => {
-            //                 const item = {
-            //                     key: '',
-            //                     name: '',
-            //                     telephone: 0,
-            //                     sex: '',
-            //                     loginName: '',
-            //                     birthday: '',
-            //                     id: ''
-            //                 }
-            //                 item.id = value.id;
-            //                 item.key = index.toString();
-            //                 item.name = value.name;
-            //                 item.telephone = value.telephone;
-            //                 item.sex = value.sex === "1" ? "男":"女";
-            //                 item.loginName = value.loginName;
-            //                 item.birthday = moment(value.birthday).format('YYYY-MM-DD');
-            //                 result.push(item);
-            //             }
-            //         );
-            //         dispatch({type: `SEARCH_DATA`, dataList:result});
-            //     })
+            searchData(dispatch,searchValues)
         }
     };
 }
